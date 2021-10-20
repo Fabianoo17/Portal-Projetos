@@ -1,0 +1,1180 @@
+﻿@model Core.Business.ViewModels.Projetos.ProjetoViewModel
+
+@{
+    ViewData["Module"] = "Projetos";
+    ViewData["Title"] = "Detalhes";
+}
+
+<div style="margin-top:10px;" class="card">
+    <div class="card-header">@ViewData["Title"]</div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="">
+
+                    <div class="form-group col-md-12 row">
+                        <div style="margin-bottom:10px;" class="">
+                            <a class="btn btn-secondary" asp-action="Index">Voltar</a>
+                        </div>
+                        <div style="margin-bottom:10px; margin-left:10px;">
+                            @if (Model.LINK_DOCUMENTACAO != null)
+                            {
+
+                                <a class="btn btn-success" href="@Model.LINK_DOCUMENTACAO" target="_blank">Documentação</a>
+
+                            }
+                            else
+                            {
+
+                                <a disabled class="btn btn-default" href="">Documentação</a>
+
+                            }
+                        </div>
+                        <button style="height:33px; margin-left:10px" class="btn btn-success" onclick="window.print()"><i class="fa fa-print"></i></button>
+                    </div>
+                </div>
+
+                <div id="" class="ibox-content">
+                    @*<button style="margin-top:4px;" onclick="salvarForm()" type="button" class="btn-success btn">Salvar</button>*@
+                    @*<form id="form" action="#">*@
+                    <form asp-action="CreateOrEdit" class="wizard-big" asp-route-CO_PROJETO="@Model.CO_PROJETO" onsubmit="return false;" id="form-projeto">
+
+
+                        @* <h2>Informações do Projeto</h2>*@
+
+                        <input asp-for="CO_PROJETO" type="hidden" />
+
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label asp-for="NOME" class="control-label"></label>
+                                <input disabled="" asp-for="NOME" class="form-control" />
+                                <span asp-validation-for="NOME" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group  col-md-3">
+                                <label asp-for="CO_TIPO" class="control-label"></label>
+                                <select disabled="" asp-for="CO_TIPO" class="form-control" asp-items="@ViewBag.DropDownTipos">
+                                    <option value="">Selecione</option>
+                                </select>
+                                <span asp-validation-for="CO_TIPO" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group  col-md-3">
+                                <label asp-for="CO_CATEGORIA" class="control-label"></label>
+                                <select disabled="" asp-for="CO_CATEGORIA" class="form-control" asp-items="@ViewBag.DropDownCategoria">
+                                    <option value="">Selecione</option>
+                                </select>
+                                <span asp-validation-for="CO_CATEGORIA" class="text-danger"></span>
+                            </div>
+                            @if(Model.CO_PROJETO_PAI != null)
+                            {
+
+                            <div class="form-group  col-md-12">
+                                <label asp-for="CO_PROJETO_PAI" class="control-label"></label>
+                                <select disabled="" asp-for="CO_PROJETO_PAI" class="form-control" asp-items="@ViewBag.DropDownProjetos">
+                                    <option value="">Selecione</option>
+                                </select>
+                                <span asp-validation-for="CO_PROJETO_PAI" class="text-danger"></span>
+                            </div>
+
+                            }
+                            @*<div class="form-group  col-md-2">
+            <label asp-for="CO_COMPLEXIDADE" class="control-label"></label>
+            <select disabled asp-for="CO_COMPLEXIDADE" class="form-control" asp-items="@ViewBag.DropDownComplexidades">
+                <option value="">Selecione</option>
+
+            </select>
+            <span asp-validation-for="CO_COMPLEXIDADE" class="text-danger"></span>
+        </div>
+
+        <div class="form-group  col-md-2">
+            <label asp-for="CO_PRIORIDADE" class="control-label"></label>
+            <select disabled asp-for="CO_PRIORIDADE" class="form-control" asp-items="@ViewBag.DropDownPrioridades">
+                <option value="">Selecione</option>
+            </select>
+            <span asp-validation-for="CO_PRIORIDADE" class="text-danger"></span>
+        </div>*@
+
+                        </div>
+                        <h5>Patrocinador</h5>
+                        <div class="row">
+                            <div class="form-group col-md-2">
+                                <label asp-for="MATRICULA_PATROCINADOR" class="control-label"></label>
+                                <input disabled asp-for="MATRICULA_PATROCINADOR" asp-items="@ViewBag.DropDownPatrocinadores" class="form-control"></input>
+                                <span asp-validation-for="MATRICULA_PATROCINADOR" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group col-md-3">
+                                <label class="control-label">Nome Completo</label>
+                                <input  id="nome-patrocinador" class="form-control" disabled="disabled" />
+
+                            </div>
+
+                            <div class="form-group col-md-2">
+                                <label class="control-label">Função</label>
+                                <input id="func-patrocinador" class="form-control" disabled="disabled" />
+
+                            </div>
+
+                            <div class="form-group col-md-2">
+                                <label class="control-label">Unidade</label>
+                                <input id="sg-und-patrocinador" class="form-control" disabled="disabled" />
+
+                            </div>
+
+                            <div class="form-group col-md-3">
+                                <label class="control-label">Nome Unidade</label>
+                                <input id="und-patrocinador" class="form-control" disabled="disabled" />
+
+                            </div>
+
+                        </div>
+                        <h5>Demandante</h5>
+                        <div class="row">
+                            <div class="form-group col-md-2">
+                                <label asp-for="GESTOR_DEMANDANTE" class="control-label"></label>
+                                <input disabled="" asp-for="GESTOR_DEMANDANTE" class="form-control" />
+                                <span asp-validation-for="GESTOR_DEMANDANTE" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group col-md-3">
+                                <label class="control-label">Nome Completo</label>
+                                <input id="nome-demandante" class="form-control" disabled="disabled" />
+
+                            </div>
+
+                            <div class="form-group col-md-2">
+                                <label class="control-label">Função</label>
+                                <input id="func-demandante" class="form-control" disabled="disabled" />
+
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="control-label">Unidade</label>
+                                <input id="sg-und-demandante" class="form-control" disabled="disabled" />
+
+                            </div>
+
+                            <div class="form-group col-md-3">
+                                <label class="control-label">Nome Unidade</label>
+                                <input id="und-demandante" class="form-control" disabled="disabled" />
+
+                            </div>
+
+                        </div>
+                        <h5>Gerente do Projeto</h5>
+                        <div class="row">
+                            <div class="form-group col-md-2">
+                                <label asp-for="MATRICULA_GERENTE" class="control-label"></label>
+                                <input disabled="" asp-for="MATRICULA_GERENTE" asp-items="@ViewBag.DropDownPatrocinadores" class="form-control "></input>
+                                <span asp-validation-for="MATRICULA_GERENTE" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group col-md-3">
+                                <label class="control-label">Nome Completo</label>
+                                <input id="nome-gerente" class="form-control" disabled="disabled" />
+
+                            </div>
+
+                            <div class="form-group col-md-2">
+                                <label class="control-label">Função</label>
+                                <input id="func-gerente" class="form-control" disabled="disabled" />
+
+                            </div>
+
+                            <div class="form-group col-md-2">
+                                <label class="control-label">Unidade</label>
+                                <input id="sg-und-gerente" class="form-control" disabled="disabled" />
+
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="control-label">Nome Unidade</label>
+                                <input id="und-gerente" class="form-control" disabled="disabled" />
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-md-12">
+                                <div class="form-group">
+                                    <label asp-for="DESCRICAO" class="control-label"></label>
+                                    <textarea disabled asp-for="DESCRICAO" rows="3" class="form-control"></textarea>
+                                    <span asp-validation-for="DESCRICAO" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-2">
+                                <label asp-for="DT_INICIO" class="control-label"></label>
+                                <input disabled asp-for="DT_INICIO" type="text" class="form-control date-picker date-mask" />
+                                <span asp-validation-for="DT_INICIO" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group col-md-2">
+                                <label asp-for="DT_FIM" class="control-label"></label>
+                                <input disabled asp-for="DT_FIM" type="text" class="form-control date-picker date-mask" />
+                                <span asp-validation-for="DT_FIM" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group col-md-3">
+                                <label asp-for="CAIXA_POSTAL" class="control-label"></label>
+                                <input disabled asp-for="CAIXA_POSTAL" class="form-control" />
+                                <span asp-validation-for="CAIXA_POSTAL" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label asp-for="CO_STATUS" class="control-label"></label>
+                                <select disabled asp-for="CO_STATUS" class="form-control" asp-items="@ViewBag.DropDownStatus">
+                                    <option value="">Selecione</option>
+                                </select>
+                                <span asp-validation-for="CO_STATUS" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label asp-for="PERCENTUAL" class="control-label"></label>
+                                <input disabled asp-for="PERCENTUAL" class="form-control" />
+                                <span asp-validation-for="PERCENTUAL" class="text-danger"></span>
+                            </div>
+
+                        </div>
+
+                        <div class="card mt-4">
+                            <div class="card-header">Objetivos</div>
+                            <div class="card-body" id="card-body-objetivos">
+
+                                @if (Model.Objetivos.Any())
+                                {
+                                    var firstItem = Model.Objetivos.FirstOrDefault();
+                                    foreach (var item in Model.Objetivos)
+                                    {
+                                        @if(item.CO_OBJETIVO != 0)
+                                        {
+
+                                        <div class="row objetivos @(firstItem == item ? "base-objetivos" : "")">
+                                            <div class="col-11">
+                                                <div class="form-group">
+                                                    Descrição
+                                                    <input  disabled value="@item.DESCRICAO" type="text" class="form-control descricao">
+                                                    <input value="@item.CO_OBJETIVO" type="hidden" class="codigo">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        }
+                                    }
+
+                                }
+
+                            </div>
+                        </div>
+                        <br />
+                        <div class="card unbreak mt-4">
+                            <div class="card-header">Marcos de Entregas</div>
+                            <div class="card-body" id="card-body-marcos-entregas">
+
+                                @if (Model.MarcosEntregas.Any())
+                                {
+                                    var firstItem = Model.MarcosEntregas.FirstOrDefault();
+                                    foreach (var item in Model.MarcosEntregas.OrderByDescending(x=>x.DT_PREVISAO))
+                                    {
+                                        @if (item.CO_MARCOS_ENTREGA != 0) {
+                                        <div class="row marcos-entregas @(firstItem == item ? "base-marcos-entregas" : "")">
+                                            <div class="col-11 row">
+                                                <div class="form-group col-4">
+                                                    Descrição
+                                                    <input disabled maxlength="250" value="@item.DESCRICAO" type="text" class="form-control descricao">
+                                                    <input value="@item.CO_MARCOS_ENTREGA" type="hidden" class="codigo">
+                                                </div>
+
+
+                                                <div class="form-group col-md-2">
+                                                    Data de Previsão
+                                                    <input disabled value="@(item.DT_PREVISAO != null ? item.DT_PREVISAO.ToString().Substring(0,10):"")" type="datetime" class="form-control date-picker date-mask dt-previsao" />
+                                                    @*<span asp-validation-for="@item.DT_PREVISAO" class="text-danger"></span>*@
+                                                </div>
+
+                                                <div class="form-group col-md-2">
+                                                    Situação da Entrega
+                                                    <select disabled asp-for="@item.STATUS" class="form-control status-entrega" asp-items="@ViewBag.DropDownStatus">
+                                                        <option value="">Selecione</option>
+                                                    </select>
+                                                    <span asp-validation-for="@item.STATUS" class="text-danger"></span>
+                                                </div>
+                                                <div class="form-group col-2">
+                                                    Responsável
+                                                    <input disabled value="@(item.Responsavel != null ? item.Responsavel.Nome : "")" type="text" class="form-control descricao">
+
+                                                </div>
+                                                <div class="form-group col-2">
+                                                    Tipo de Entrega
+                                                    <input disabled value="@(item.TipoEntrega != null ? item.TipoEntrega.NOME : "")" type="text" class="form-control descricao">
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        }
+                                    }
+
+                                }
+
+                            </div>
+                        </div>
+                        <br />
+
+                        <div class="card col-mt-4 unbreak">
+                            <div class="card-header">Partes Interessadas</div>
+                            <div class="card-body" id="card-body-parteInteressada">
+
+                                @if (Model.PartesInteressadas.Any())
+                                {
+                                    var firstItem = Model.PartesInteressadas.FirstOrDefault();
+                                    foreach (var item in Model.PartesInteressadas)
+                                    {
+                                        @if(item.CO_PARTE != 0)
+                                        {
+
+                                        <div class="row parteInteressada @(firstItem == item ? "base-parteInteressada" : "")">
+                                            <div class="col-11 row">
+                                                <div class="form-group col-md-2">
+                                                    CGC Unidade
+                                                    <input  disabled id="cgc_und_id" value="@item.CGC_UND" type="number" class="form-control cgc_und" onfocusout="carregarPartesInteressadas(this)">
+                                                    <input value="@item.CO_PARTE" type="hidden" class="codigo">
+                                                </div>
+
+                                                <div class="form-group col-md-2">
+                                                    Sigla Unidade
+                                                    <input id="sgUnd" disabled="disabled" value="@if(item.Unidade != null) { @item.Unidade.SG_SIGLA} " type="text" class="form-control SgUnidade">
+                                                </div>
+
+                                                <div class="form-group col-md-8">
+                                                    Nome da Unidade
+                                                    <input id="nomeUnd" disabled="disabled" value="@if(item.Unidade != null){ @item.Unidade.NO_UNIDADE} " type="text" class="form-control NomeUnidade">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        }
+                                    }
+
+                                }
+
+                            </div>
+                        </div>
+                        <br />
+                        <div class="card col-mt-4 unbreak">
+                            <div class="card-header">Equipe de Apoio</div>
+                            <div class="card-body" id="card-body-EquipeApoio">
+
+                                @if (Model.EquipeApoio.Any())
+                                {
+                                    var firstItem = Model.EquipeApoio.FirstOrDefault();
+                                    foreach (var item in Model.EquipeApoio)
+                                    {
+                                        @if(item.CO_APOIO != 0) {
+                                        <div class="row EquipeApoio @(firstItem == item ? "base-EquipeApoio" : "")">
+                                            <div class="col-11 row">
+                                                <div class="form-group col-md-2">
+                                                    Matricula
+                                                    <input  disabled onfocusout="carregaApoio(this)" value="@item.MATRICULA" type="text" class="form-control matricula">
+                                                    <input value="@item.CO_APOIO" type="hidden" class="codigo">
+                                                </div>
+                                                <div class="form-group col-md-3">
+                                                    Nome Completo
+                                                    <input id="nomeApoio" disabled="disabled" value="@if (item.UserApoio != null) {@item.UserApoio.Nome } " type="text" class="form-control descricao">
+                                                </div>
+
+                                                <div class="form-group col-md-2">
+                                                    Função
+                                                    <input id="FuncApoio" disabled="disabled" value="@if (item.UserApoio != null) {@item.UserApoio.Funcao } " type="text" class="form-control descricao">
+                                                </div>
+                                                <div class="form-group col-md-2">
+                                                    Sigla Unidade
+                                                    <input id="SGUndApoio" disabled="disabled" value="@if (item.UserApoio != null) {@item.UserApoio.SiglaUnidade } " type="text" class="form-control descricao">
+                                                </div>
+                                                <div class="form-group col-md-3">
+                                                    Unidade
+                                                    <input id="UndApoio" disabled="disabled" value="@if (item.UserApoio != null) {@item.UserApoio.NomeUnidade } " type="text" class="form-control descricao">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        }
+                                    }
+
+                                }
+
+                            </div>
+                        </div>
+
+                        <div class="card mt-4 unbreak">
+                            <div class="card-header">Justificativas</div>
+                            <div class="card-body" id="card-body-justificativas">
+
+                                @if (Model.Justificativas.Any())
+                                {
+                                    var firstItem = Model.Justificativas.FirstOrDefault();
+                                    foreach (var item in Model.Justificativas)
+                                    {
+                                        @if(item.CO_JUSTIFICATIVA != 0)
+                                        {
+
+                                        <div class="row justificativas @(firstItem == item ? "base-justificativas" : "")">
+                                            <div class="col-11">
+                                                <div class="form-group">
+                                                    Descrição
+                                                    <input  disabled value="@item.DESCRICAO" type="text" class="form-control descricao">
+                                                    <input value="@item.CO_JUSTIFICATIVA" type="hidden" class="codigo">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        }
+                                    }
+
+                                }
+
+                            </div>
+                        </div>
+                    
+                        <div class="card mt-4 unbreak">
+                            <div class="card-header">Benefícios</div>
+                            <div class="card-body" id="card-body-beneficios">
+
+                                @if (Model.Beneficios.Any())
+                                {
+                                    var firstItem = Model.Beneficios.FirstOrDefault();
+                                    foreach (var item in Model.Beneficios)
+                                    {
+                                        @if(item.CO_BENEFICIO != 0)
+                                        {
+
+                                        <div class="row beneficios @(firstItem == item ? "base-beneficios" : "")">
+                                            <div class="col-11">
+                                                <div class="form-group">
+                                                    Descrição
+                                                    <input  disabled value="@item.DESCRICAO" type="text" class="form-control descricao">
+                                                    <input value="@item.CO_BENEFICIO" type="hidden" class="codigo">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        }
+                                    }
+
+                                }
+
+                            </div>
+                        </div>
+                        <div class="card mt-4 unbreak">
+                            <div class="card-header">Escopo</div>
+                            <div class="card-body" id="card-body-escopos">
+
+                                @if (Model.Escopos.Any())
+                                {
+                                    var firstItem = Model.Escopos.FirstOrDefault();
+                                    foreach (var item in Model.Escopos)
+                                    {
+                                        @if(item.CO_ESCOPO != 0)
+                                        {
+
+                                        <div class="row escopos @(firstItem == item ? "base-escopos" : "")">
+                                            <div class="col-11">
+                                                <div class="form-group">
+                                                    Descrição
+                                                    <input  disabled value="@item.DESCRICAO" type="text" class="form-control descricao">
+                                                    <input value="@item.CO_ESCOPO" type="hidden" class="codigo">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        }
+                                    }
+
+                                }
+
+                            </div>
+                        </div>
+
+                        <div class="card mt-4 unbreak">
+                            <div class="card-header">Não Escopo</div>
+                            <div class="card-body" id="card-body-nao-escopos">
+
+                                @if (Model.NaoEscopos.Any())
+                                {
+                                    var firstItem = Model.NaoEscopos.FirstOrDefault();
+                                    foreach (var item in Model.NaoEscopos)
+                                    {
+                                        @if (item.CO_NAO_ESCOPO != 0) {
+                                        <div class="row nao-escopos @(firstItem == item ? "base-nao-escopos" : "")">
+                                            <div class="col-11">
+                                                <div class="form-group">
+                                                    Descrição
+                                                    <input  disabled value="@item.DESCRICAO" type="text" class="form-control descricao">
+                                                    <input value="@item.CO_NAO_ESCOPO" type="hidden" class="codigo">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        }
+                                    }
+
+                                }
+
+                            </div>
+                        </div>
+                        <div class="card mt-4 unbreak">
+                            <div class="card-header">Premissas</div>
+                            <div class="card-body" id="card-body-premissas">
+
+                                @if (Model.Premissas.Any())
+                                {
+                                    var firstItem = Model.Premissas.FirstOrDefault();
+                                    foreach (var item in Model.Premissas)
+                                    {
+                                        @if (item.CO_PREMISSA != 0)
+                                        {
+                                        <div class="row premissas @(firstItem == item ? "base-premissas" : "")">
+                                            <div class="col-11">
+                                                <div class="form-group">
+                                                    Descrição
+                                                    <input  disabled value="@item.DESCRICAO" type="text" class="form-control descricao">
+                                                    <input value="@item.CO_PREMISSA" type="hidden" class="codigo">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        }
+                                    }
+
+                                }
+
+                            </div>
+                        </div>
+                        <div class="card mt-4 unbreak">
+                            <div class="card-header">Requisitos</div>
+                            <div class="card-body" id="card-body-requisitos">
+
+                                @if (Model.Requisitos.Any())
+                                {
+                                    var firstItem = Model.Requisitos.FirstOrDefault();
+                                    foreach (var item in Model.Requisitos)
+                                    {
+                                        @if(item.CO_REQUISITO != 0)
+                                        {
+
+                                        <div class="row requisitos @(firstItem == item ? "base-requisitos" : "")">
+                                            <div class="col-11">
+                                                <div class="form-group">
+                                                    Descrição
+                                                    <input  disabled value="@item.DESCRICAO" type="text" class="form-control descricao">
+                                                    <input value="@item.CO_REQUISITO" type="hidden" class="codigo">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        }
+                                    }
+
+                                }
+
+                            </div>
+                        </div>
+
+                        <div class="card mt-4 unbreak">
+                            <div class="card-header">Restrições</div>
+                            <div class="card-body" id="card-body-restricoes">
+
+                                @if (Model.Restricoes.Any())
+                                {
+                                    var firstItem = Model.Restricoes.FirstOrDefault();
+                                    foreach (var item in Model.Restricoes)
+                                    {
+                                        @if(item.CO_RESTRICAO != 0)
+                                        {
+
+                                        <div class="row restricoes @(firstItem == item ? "base-restricoes" : "")">
+                                            <div class="col-11">
+                                                <div class="form-group">
+                                                    Descrição
+                                                    <input  disabled value="@item.DESCRICAO" type="text" class="form-control descricao">
+                                                    <input value="@item.CO_RESTRICAO" type="hidden" class="codigo">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        }
+                                    }
+
+                                }
+
+                            </div>
+                        </div>
+
+                        <div class="card mt-4 unbreak">
+                            <div class="card-header">Riscos</div>
+                            <div class="card-body" id="card-body-riscos">
+
+                                @if (Model.Riscos.Any())
+                                {
+                                    var firstItem = Model.Riscos.FirstOrDefault();
+                                    foreach (var item in Model.Riscos)
+                                    {
+                                        @if (item.CO_RISCO != 0)
+                                        {
+
+                                        <div class="row riscos @(firstItem == item ? "base-riscos" : "")">
+                                            <div class="col-11">
+                                                <div class="form-group">
+                                                    Descrição
+                                                    <input  disabled value="@item.DESCRICAO" type="text" class="form-control descricao">
+                                                    <input value="@item.CO_RISCO" type="hidden" class="codigo">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        }
+                                    }
+
+                                }
+
+                            </div>
+                        </div>
+
+                        <div class="card mt-4 unbreak">
+                            <div class="card-header">Custos</div>
+                            <div class="card-body" id="card-body-custos">
+
+                                @if (Model.Custos.Any())
+                                {
+                                    var firstItem = Model.Custos.FirstOrDefault();
+                                    foreach (var item in Model.Custos)
+                                    {
+                                        @if (item.CO_CUSTO != 0)
+                                        {
+
+                                        <div class="row custos @(firstItem == item ? "base-custos" : "")">
+                                            <div class="col-9">
+                                                <div class="form-group">
+                                                    Descrição
+                                                    <input  disabled value="@item.DESCRICAO" type="text" class="form-control descricao">
+                                                    <input value="@item.CO_CUSTO" type="hidden" class="codigo">
+                                                </div>
+                                            </div>
+                                            <div class="col-2">
+                                                <div class="form-group">
+                                                    Valor
+                                                    <input disabled value="@item.VALOR" type="text" class="form-control money-mask valor">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        }
+                                    }
+
+                                }
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+@section scripts{ 
+
+
+<script>
+    $(document).ready(function () {
+        carregaInformacoesPatrocinador();
+        carregaInformacoesDemandante();
+        carregaInformacoesGerente();
+  
+    });
+
+    (function ($) {
+        $.fn.createPdf = function (parametros) {
+
+            var config = {
+                'fileName': 'html-to-pdf'
+            };
+
+            if (parametros) {
+                $.extend(config, parametros);
+            }
+
+            var quotes = document.getElementById($(this).attr('id'));
+
+            html2canvas(quotes, {
+                onrendered: function (canvas) {
+                    var pdf = new jsPDF('p', 'pt', 'letter');
+
+                    for (var i = 0; i <= quotes.clientHeight / 980; i++) {
+                        var srcImg = canvas;
+                        var sX = 0;
+                        var sY = 980 * i;
+                        var sWidth = 900;
+                        var sHeight = 980;
+                        var dX = 0;
+                        var dY = 0;
+                        var dWidth = 900;
+                        var dHeight = 980;
+
+                        window.onePageCanvas = document.createElement("canvas");
+                        onePageCanvas.setAttribute('width', 900);
+                        onePageCanvas.setAttribute('height', 980);
+                        var ctx = onePageCanvas.getContext('2d');
+                        ctx.drawImage(srcImg, sX, sY, sWidth, sHeight, dX, dY, dWidth, dHeight);
+
+                        var canvasDataURL = onePageCanvas.toDataURL("image/png", 1.0);
+                        var width = onePageCanvas.width;
+                        var height = onePageCanvas.clientHeight;
+
+                        if (i > 0) {
+                            pdf.addPage(612, 791);
+                        }
+
+                        pdf.setPage(i + 1);
+                        pdf.addImage(canvasDataURL, 'PNG', 20, 40, (width * .62), (height * .62));
+                    }
+
+                    pdf.save(config.fileName);
+                }
+            });
+        };
+    })(jQuery);
+
+
+    function createPDF() {
+        $('#renderPDF').createPdf({
+            'fileName': 'testePDF'
+        });
+    }
+
+
+
+
+
+    function carregaInformacoesPatrocinador() {
+        var mat = $("#MATRICULA_PATROCINADOR").val();
+        $.ajax({
+            type: 'POST',
+            url: "/Projetos/ObterUsuario",
+            data: {
+                matricula: mat
+            },
+            success: function (data) {
+                if (data != null) {
+                    $("#nome-patrocinador").val(data.nome);
+                    $("#und-patrocinador").val(data.nomeUnidade);
+                    $("#sg-und-patrocinador").val(data.codigoUnidade + "-" + data.siglaUnidade);
+                    $("#func-patrocinador").val(data.funcao);
+                }
+            }
+        });
+    }
+
+
+
+
+
+
+
+    function carregaInformacoesDemandante() {
+        var mat = $("#GESTOR_DEMANDANTE").val();
+        $.ajax({
+            type: 'POST',
+            url: "/Projetos/ObterUsuario",
+            data: {
+                matricula: mat
+            },
+            success: function (data) {
+                console.log(data);
+                if (data != null) {
+                    $("#nome-demandante").val(data.nome);
+                    $("#sg-und-demandante").val(data.codigoUnidade + "-" + data.siglaUnidade);
+                    $("#und-demandante").val(data.nomeUnidade);
+                    $("#func-demandante").val(data.funcao);
+                }
+            }
+        });
+    }
+
+    function carregaInformacoesGerente() {
+        var mat = $("#MATRICULA_GERENTE").val();
+        console.log(mat);
+        $.ajax({
+            type: 'POST',
+            url: "/Projetos/ObterUsuario",
+            data: {
+                matricula: mat
+            },
+            success: function (data) {
+                console.log(data);
+                if (data != null) {
+
+                    $("#nome-gerente").val(data.nome);
+                    $("#sg-und-gerente").val(data.codigoUnidade + "-" + data.siglaUnidade);
+                    $("#und-gerente").val(data.nomeUnidade);
+                    $("#func-gerente").val(data.funcao);
+                }
+            }
+        });
+    }
+
+
+</script>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*<div class="card">
+    <div class="card-header">@ViewData["Title"]</div>
+    <div class="card-body">
+
+        <form onsubmit="return false;">
+
+            <div class="row">
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label asp-for="NOME" class="control-label"></label>
+                        <input disabled asp-for="NOME" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="DESCRICAO" class="control-label"></label>
+                        <textarea disabled asp-for="DESCRICAO" rows="3" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="OBSERVACAO" class="control-label"></label>
+                        <textarea disabled asp-for="OBSERVACAO" rows="3" class="form-control"></textarea>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label asp-for="GESTOR_DEMANDANTE" class="control-label"></label>
+                        <input disabled asp-for="GESTOR_DEMANDANTE" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="MATRICULA_PATROCINADOR" class="control-label"></label>
+                        <select disabled asp-for="MATRICULA_PATROCINADOR" asp-items="@ViewBag.DropDownPatrocinadores" class="form-control"></select>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="MATRICULA_GERENTE" class="control-label"></label>
+                        <select disabled asp-for="MATRICULA_GERENTE" asp-items="@ViewBag.DropDownGerentes" class="form-control"></select>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="CO_TIPO" class="control-label"></label>
+                        <select disabled asp-for="CO_TIPO" class="form-control" asp-items="@ViewBag.DropDownTipos"></select>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label asp-for="DT_INICIO" class="control-label"></label>
+                                <input disabled asp-for="DT_INICIO" type="text" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label asp-for="DT_FIM" class="control-label"></label>
+                                <input disabled asp-for="DT_FIM" type="text" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="CO_STATUS" class="control-label"></label>
+                        <select disabled asp-for="CO_STATUS" class="form-control" asp-items="@ViewBag.DropDownStatus"></select>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="PERCENTUAL" class="control-label"></label>
+                        <input disabled asp-for="PERCENTUAL" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="CAIXA_POSTAL" class="control-label"></label>
+                        <input disabled asp-for="CAIXA_POSTAL" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            @if (Model.LINK_DOCUMENTACAO != null)
+            {
+                <div style="margin-bottom:10px;">
+                    <a class="btn btn-success" href="@Model.LINK_DOCUMENTACAO" target="_blank">Documentação</a>
+                </div>
+            }
+            else
+            {
+                <div style="margin-bottom:10px;">
+                    <a disabled class="btn btn-default" href="" >Documentação</a>
+                </div>
+            }
+            <div class="card">
+                <div class="card-header">Objetivos</div>
+                <div class="card-body" id="card-body-objetivos">
+
+                    @if (Model.Objetivos.Any())
+                    {
+                        foreach (var item in Model.Objetivos)
+                        {
+                            <div class="row">
+                                <div class="col-11">
+                                    <div class="form-group">
+                                        Descrição
+                                        <input disabled value="@item.DESCRICAO" type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-1 pt-4"></div>
+                            </div>
+                        }
+                    }
+
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header">Custos</div>
+                <div class="card-body" id="card-body-custos">
+
+                    @if (Model.Custos.Any())
+                    {
+                        foreach (var item in Model.Custos)
+                        {
+                            <div class="row">
+                                <div class="col-9">
+                                    <div class="form-group">
+                                        Descrição
+                                        <input disabled value="@item.DESCRICAO" type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="form-group">
+                                        Valor
+                                        <input disabled value="@item.VALOR" type="text" class="form-control money-mask">
+                                    </div>
+                                </div>
+                                <div class="col-1 pt-4"></div>
+                            </div>
+                        }
+                    }
+
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header">Justificativas</div>
+                <div class="card-body" id="card-body-justificativas">
+
+                    @if (Model.Justificativas.Any())
+                    {
+                        foreach (var item in Model.Justificativas)
+                        {
+                            <div class="row">
+                                <div class="col-11">
+                                    <div class="form-group">
+                                        Descrição
+                                        <input disabled value="@item.DESCRICAO" type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-1 pt-4"></div>
+                            </div>
+                        }
+                    }
+
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header">Restrições</div>
+                <div class="card-body" id="card-body-restricoes">
+
+                    @if (Model.Restricoes.Any())
+                    {
+                        foreach (var item in Model.Restricoes)
+                        {
+                            <div class="row">
+                                <div class="col-11">
+                                    <div class="form-group">
+                                        Descrição
+                                        <input disabled value="@item.DESCRICAO" type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-1 pt-4"></div>
+                            </div>
+                        }
+                    }
+
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header">Riscos</div>
+                <div class="card-body" id="card-body-riscos">
+
+                    @if (Model.Riscos.Any())
+                    {
+                        foreach (var item in Model.Riscos)
+                        {
+                            <div class="row">
+                                <div class="col-11">
+                                    <div class="form-group">
+                                        Descrição
+                                        <input disabled value="@item.DESCRICAO" type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-1 pt-4"></div>
+                            </div>
+                        }
+                    }
+
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header">Benefícios</div>
+                <div class="card-body" id="card-body-beneficios">
+
+                    @if (Model.Beneficios.Any())
+                    {
+                        foreach (var item in Model.Beneficios)
+                        {
+                            <div class="row">
+                                <div class="col-11">
+                                    <div class="form-group">
+                                        Descrição
+                                        <input disabled value="@item.DESCRICAO" type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-1 pt-4"></div>
+                            </div>
+                        }
+                    }
+
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header">Premissas</div>
+                <div class="card-body" id="card-body-premissas">
+
+                    @if (Model.Premissas.Any())
+                    {
+                        foreach (var item in Model.Premissas)
+                        {
+                            <div class="row">
+                                <div class="col-11">
+                                    <div class="form-group">
+                                        Descrição
+                                        <input disabled value="@item.DESCRICAO" type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-1 pt-4"></div>
+                            </div>
+                        }
+                    }
+
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header">Marcos de Entregas</div>
+                <div class="card-body" id="card-body-marcos-entregas">
+
+                    @if (Model.MarcosEntregas.Any())
+                    {
+                        foreach (var item in Model.MarcosEntregas)
+                        {
+                            <div class="row">
+                                <div class="col-11">
+                                    <div class="form-group">
+                                        Descrição
+                                        <input disabled value="@item.DESCRICAO" type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-1 pt-4"></div>
+                            </div>
+                        }
+                    }
+
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header">Arquivos</div>
+                <div class="card-body" id="card-body-arquivos">
+
+                    @if (Model.Arquivos.Any())
+                    {
+                        foreach (var item in Model.Arquivos)
+                        {
+                            <div class="row">
+                                <div class="col-7">
+                                    <div class="form-group">
+                                        Endereço
+                                        <input disabled value="@item.ENDERECO" type="text" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        Nome
+                                        <input disabled value="@item.NOME" type="text" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-1 pt-4"></div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+
+
+        </form>
+    </div>
+</div>*@

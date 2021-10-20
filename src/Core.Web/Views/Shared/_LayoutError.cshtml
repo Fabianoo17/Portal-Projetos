@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>@ViewData["Title"] - Portal Projetos</title>
+
+    <link rel="shortcut icon" href="~/img/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="~/img/favicon.ico" type="image/x-icon">
+
+    <link href="~/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/vendor/@@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet" asp-append-version="true" />
+
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    @RenderBody()
+
+    <script src="~/vendor/jquery/jquery.min.js" asp-append-version="true"></script>
+    <script src="~/vendor/popper.js/umd/popper.min.js" asp-append-version="true"></script>
+    <script src="~/vendor/bootstrap/js/bootstrap.min.js" asp-append-version="true"></script>
+    <script src="~/vendor/moment/moment-with-locales.min.js" asp-append-version="true"></script>
+
+    <script src="~/libs/modernizr/modernizr-custom.js" asp-append-version="true"></script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

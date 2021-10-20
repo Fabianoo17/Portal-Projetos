@@ -1,0 +1,99 @@
+﻿@model Core.Business.Entities.Graphs.OrgChart
+
+<link href="~/libs/OrgChart/Orgchart.css" rel="stylesheet" />
+
+<style>
+    color-profile{
+        color:#b23333
+    }
+</style>
+
+<figure class="highcharts-figure">
+    <div id="container"></div>
+    <p class="highcharts-description">
+
+    </p>
+</figure>
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/sankey.js"></script>
+<script src="https://code.highcharts.com/modules/organization.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+
+@section scripts{
+
+
+<script>
+                       
+    var size = @Model.data.Count();
+    if (size < 7) {
+        size = 600
+    } else {
+        size = size * 100;
+    }
+
+    
+    Highcharts.chart('container', {
+                chart: {
+                    height: size,
+                    whidth:100+'%',
+                    inverted: true
+                },
+
+                title: {
+                    text: @Html.Raw("'"+Model.Nodes.FirstOrDefault().name+"'")
+                },
+
+                accessibility: {
+                    point: {
+                        descriptionFormatter: function (point) {
+                            var nodeName = point.toNode.name,
+                                nodeId = point.toNode.id,
+                                nodeDesc = nodeName === nodeId ? nodeName : nodeName + ', ' + nodeId,
+                                parentDesc = point.fromNode.id;
+                            return point.index + '. ' + nodeDesc + ', reports to ' + parentDesc + '.';
+                        }
+                    }
+                },
+
+                series: [{
+                    type: 'organization',
+                    name: '',
+                    keys: ['from', 'to'],
+                    data: [ @Html.Raw( String.Join(" , ", Model.data.Select(x => "[" + "'"+x.pai+"'" + ", " + "'"+x.filho+"'" + "]").ToList()))],
+                    levels: [{
+                        level: 0,
+                        color: 'silver',
+                        name:'Programa',
+                        dataLabels: {
+                            color: 'black'
+                        },
+                        height: 40
+                    }],
+                    nodes:@Html.Raw(Json.Serialize(Model.Nodes)) ,
+                    colorByPoint: false,
+                    color: '#007ad0',
+                    dataLabels: {
+                        color: 'white'
+                    },
+                    borderColor: 'white',
+                    nodeWidth: 65
+                }],
+                tooltip: {
+                    outside: true
+                },
+                exporting: {
+                    allowHTML: true,
+                    sourceWidth: 800,
+                    sourceHeight: 600
+                }
+
+            });
+
+      
+
+</script>
+
+}

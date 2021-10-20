@@ -1,0 +1,1314 @@
+﻿@model Core.Business.ViewModels.Projetos.ProjetoViewModel
+
+@{
+    ViewData["Module"] = "Projetos";
+
+    bool isAdminstrador = this.CustomAuthorize(new[] { EPerfil.Administrador });
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox">
+
+            <div class="ibox-content">
+                @if(Model.DT_ALTERACAO != null)
+                {
+                 <span  class="float-right">Atualizado em: @Model.DT_ALTERACAO</span>
+                }
+                @*<button style="margin-top:4px;" onclick="salvarForm()" type="button" class="btn-success btn">Salvar</button>*@
+                @*<form id="form" action="#">*@
+                <form asp-action="CreateOrEdit" class="wizard-big" asp-route-CO_PROJETO="@Model.CO_PROJETO" onsubmit="return false;" id="form-projeto">
+
+                    <h1>Abertura</h1>
+                    <fieldset>
+                        @* <h2>Informações do Projeto</h2>*@
+
+                        <input asp-for="CO_PROJETO" type="hidden" />
+
+                        <div class="row">
+                            <div class="form-group col-md-12">
+                                <label asp-for="NOME" class="control-label"></label>
+                                <input maxlength="255" disabled="@(!isAdminstrador ? "disabled" : null)" asp-for="NOME" class="form-control required" />
+                                <span asp-validation-for="NOME" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label asp-for="CO_PROJETO_PAI" class="control-label"></label>
+                                <select disabled="@(!isAdminstrador ? "disabled" : null)" asp-for="CO_PROJETO_PAI" class="form-control" asp-items="@ViewBag.DropDownProjetos">
+                                    <option value="">Selecione</option>
+                                </select>
+                                <span asp-validation-for="CO_PROJETO_PAI" class="text-danger required"></span>
+                            </div>
+                            <div class="form-group  col-md-2">
+                                <label asp-for="CO_TIPO" class="control-label required"></label>
+                                <select disabled="@(!isAdminstrador ? "disabled" : null)" asp-for="CO_TIPO" class="form-control required" asp-items="@ViewBag.DropDownTipos">
+                                    <option value="">Selecione</option>
+                                </select>
+                                <span asp-validation-for="CO_TIPO" class="text-danger"></span>
+                            </div>
+                            <div class="form-group  col-md-2">
+                                <label asp-for="CO_CATEGORIA" class="control-label"></label>
+                                <select disabled="@(!isAdminstrador ? "disabled" : null)" asp-for="CO_CATEGORIA" class="form-control" asp-items="@ViewBag.DropDownCategorias">
+                                    <option value="">Selecione</option>
+                                </select>
+                                <span asp-validation-for="CO_CATEGORIA" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group  col-md-2">
+                                <label asp-for="CO_COMPLEXIDADE" class="control-label"></label>
+                                <select disabled="@(!isAdminstrador ? "disabled" : null)" asp-for="CO_COMPLEXIDADE" class="form-control" asp-items="@ViewBag.DropDownComplexidades">
+                                    <option value="">Selecione</option>
+
+                                </select>
+                                <span asp-validation-for="CO_COMPLEXIDADE" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group  col-md-2">
+                                <label asp-for="CO_PRIORIDADE" class="control-label"></label>
+                                <select disabled="@(!isAdminstrador ? "disabled" : null)" asp-for="CO_PRIORIDADE" class="form-control" asp-items="@ViewBag.DropDownPrioridades">
+                                    <option value="">Selecione</option>
+                                </select>
+                                <span asp-validation-for="CO_PRIORIDADE" class="text-danger"></span>
+                            </div>
+
+                        </div>
+                        <h5>Patrocinador</h5>
+                        <div class="row">
+                            <div class="form-group col-lg-2">
+                                <label asp-for="MATRICULA_PATROCINADOR" class="control-label"></label>
+                                <input disabled="@(!isAdminstrador ? "disabled" : null)" asp-for="MATRICULA_PATROCINADOR" asp-items="@ViewBag.DropDownPatrocinadores" class="form-control"></input>
+                                <span asp-validation-for="MATRICULA_PATROCINADOR" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label class="control-label">Nome Completo</label>
+                                <input id="nome-patrocinador" class="form-control" disabled="disabled" />
+
+                            </div>
+
+                            <div class="form-group col-lg-2">
+                                <label class="control-label">Função</label>
+                                <input id="func-patrocinador" class="form-control" disabled="disabled" />
+
+                            </div>
+
+                            <div class="form-group col-lg-2">
+                                <label class="control-label">Unidade</label>
+                                <input id="sg-und-patrocinador" class="form-control" disabled="disabled" />
+
+                            </div>
+
+                            <div class="form-group col-lg-3">
+                                <label class="control-label">Nome Unidade</label>
+                                <input id="und-patrocinador" class="form-control" disabled="disabled" />
+
+                            </div>
+
+                        </div>
+                        <h5>Demandante</h5>
+                        <div class="row">
+                            <div class="form-group col-md-2">
+                                <label asp-for="GESTOR_DEMANDANTE" class="control-label"></label>
+                                <input disabled="@(!isAdminstrador ? "disabled" : null)" asp-for="GESTOR_DEMANDANTE" class="form-control" />
+                                <span asp-validation-for="GESTOR_DEMANDANTE" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group col-md-3">
+                                <label class="control-label">Nome Completo</label>
+                                <input id="nome-demandante" class="form-control" disabled="disabled" />
+
+                            </div>
+
+                            <div class="form-group col-md-2">
+                                <label class="control-label">Função</label>
+                                <input id="func-demandante" class="form-control" disabled="disabled" />
+
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label class="control-label">Unidade</label>
+                                <input id="sg-und-demandante" class="form-control" disabled="disabled" />
+
+                            </div>
+
+                            <div class="form-group col-md-3">
+                                <label class="control-label">Nome Unidade</label>
+                                <input id="und-demandante" class="form-control" disabled="disabled" />
+
+                            </div>
+
+                        </div>
+                        <h5>Gerente do Projeto</h5>
+                        <div class="row">
+                            <div class="form-group col-md-2">
+                                <label asp-for="MATRICULA_GERENTE" class="control-label"></label>
+                                <input disabled="@(!isAdminstrador ? "disabled" : null)" asp-for="MATRICULA_GERENTE" asp-items="@ViewBag.DropDownPatrocinadores" class="form-control "></input>
+                                <span asp-validation-for="MATRICULA_GERENTE" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group col-md-3">
+                                <label class="control-label">Nome Completo</label>
+                                <input id="nome-gerente" class="form-control" disabled="disabled" />
+
+                            </div>
+
+                            <div class="form-group col-md-2">
+                                <label class="control-label">Função</label>
+                                <input id="func-gerente" class="form-control" disabled="disabled" />
+
+                            </div>
+
+                            <div class="form-group col-md-2">
+                                <label class="control-label">Unidade</label>
+                                <input id="sg-und-gerente" class="form-control" disabled="disabled" />
+
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="control-label">Nome Unidade</label>
+                                <input id="und-gerente" class="form-control" disabled="disabled" />
+
+                            </div>
+                        </div>
+
+                    </fieldset>
+                    <h1>Dados Principais</h1>
+                    <fieldset>
+                        <div class="row">
+                            <div class="form-group col-md-12">
+                                <div class="form-group">
+                                    <label asp-for="DESCRICAO" class="control-label"></label>
+                                    <textarea maxlength="1000" asp-for="DESCRICAO" rows="3" class="form-control"></textarea>
+                                    <span asp-validation-for="DESCRICAO" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-2">
+                                <label asp-for="DT_INICIO" class="control-label"></label>
+                                <input disabled="@(!isAdminstrador ? "disabled" : null)" asp-for="DT_INICIO" type="text" class="form-control date-picker date-mask" />
+                                <span asp-validation-for="DT_INICIO" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group col-md-2">
+                                <label asp-for="DT_FIM" class="control-label"></label>
+                                <input disabled="@(!isAdminstrador ? "disabled" : null)" asp-for="DT_FIM" type="text" class="form-control date-picker date-mask" />
+                                <span asp-validation-for="DT_FIM" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group col-md-3">
+                                <label asp-for="CAIXA_POSTAL" class="control-label"></label>
+                                <input maxlength="100" asp-for="CAIXA_POSTAL" class="form-control" />
+                                <span asp-validation-for="CAIXA_POSTAL" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label asp-for="CO_STATUS" class="control-label"></label>
+                                <select disabled="@(!isAdminstrador ? "disabled" : null)" asp-for="CO_STATUS" class="form-control" asp-items="@ViewBag.DropDownStatus">
+                                    <option value="">Selecione</option>
+                                </select>
+                                <span asp-validation-for="CO_STATUS" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label asp-for="PERCENTUAL" class="control-label"></label>
+                                <input asp-for="PERCENTUAL" class="form-control" />
+                                <span asp-validation-for="PERCENTUAL" class="text-danger"></span>
+                            </div>
+
+                        </div>
+                        <div class="row">
+
+                            <div class="form-group col-md-12">
+                                <label asp-for="LINK_DOCUMENTACAO" class="control-label"></label>
+                                <input maxlength="1000" asp-for="LINK_DOCUMENTACAO" class="form-control" />
+                                <span asp-validation-for="LINK_DOCUMENTACAO" class="text-danger"></span>
+                            </div>
+                        </div>
+                        @{ await Html.RenderPartialAsync("_Objetivos"); }
+                        <br />
+                        @{ await Html.RenderPartialAsync("_MarcosEntregas"); }
+                        <br />
+                        <div id="corpo-marcos_entrega-relacionado">
+                            @{ await Html.RenderPartialAsync("_MarcosEntregasRelacionado"); }
+                            </div>
+                            <br />
+
+                            <div class="card col-mt-4">
+                                <div class="card-header">Partes Interessadas</div>
+                                <div class="card-body" id="card-body-parteInteressada">
+
+                                    @if (Model.PartesInteressadas.Any())
+                                    {
+                                        var firstItem = Model.PartesInteressadas.FirstOrDefault();
+                                        foreach (var item in Model.PartesInteressadas)
+                                        {
+                                            <div class="row parteInteressada @(firstItem == item ? "base-parteInteressada" : "")">
+                                                <div class="col-11 row">
+                                                    <div class="form-group col-md-2">
+                                                        CGC Unidade
+                                                        <input id="cgc_und_id" value="@item.CGC_UND" type="number" class="form-control cgc_und" onfocusout="carregarPartesInteressadas(this)">
+                                                        <input value="@item.CO_PARTE" type="hidden" class="codigo">
+                                                    </div>
+
+                                                    <div class="form-group col-md-2">
+                                                        Sigla Unidade
+                                                        <input id="sgUnd" disabled="disabled" value="@if(item.Unidade != null) { @item.Unidade.SG_SIGLA} " type="text" class="form-control SgUnidade">
+                                                    </div>
+
+                                                    <div class="form-group col-md-8">
+                                                        Nome da Unidade
+                                                        <input id="nomeUnd" disabled="disabled" value="@if(item.Unidade != null){ @item.Unidade.NO_UNIDADE} " type="text" class="form-control NomeUnidade">
+                                                    </div>
+                                                </div>
+                                                <div class="col-1 pt-4">
+                                                    <a class="@(firstItem == item ? "btn-remove-item-base" : "btn-remove-item") text-danger" href="javascript:void(0);">
+                                                        <i class="fa fa-trash"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        }
+                                        <button id="btn-add-parteInteressada" type="button" class="btn btn-success"><i class="fa fa-plus"></i> Parte Interessada</button>
+                                    }
+
+                                </div>
+                            </div>
+                            <br />
+                            <div class="card col-mt-4">
+                                <div class="card-header">Equipe de Apoio</div>
+                                <div class="card-body" id="card-body-EquipeApoio">
+
+                                    @if (Model.EquipeApoio.Any())
+                                    {
+                                        var firstItem = Model.EquipeApoio.FirstOrDefault();
+                                        foreach (var item in Model.EquipeApoio)
+                                        {
+                                            <div class="row EquipeApoio @(firstItem == item ? "base-EquipeApoio" : "")">
+                                                <div class="col-11 row">
+                                                    <div class="form-group col-md-2">
+                                                        Matricula
+                                                        <input onfocusout="carregaApoio(this)" value="@item.MATRICULA" type="text" class="form-control matricula">
+                                                        <input value="@item.CO_APOIO" type="hidden" class="codigo">
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        Nome Completo
+                                                        <input id="nomeApoio" disabled="disabled" value="@if (item.UserApoio != null) {@item.UserApoio.Nome } " type="text" class="form-control descricao">
+                                                    </div>
+
+                                                    <div class="form-group col-md-2">
+                                                        Função
+                                                        <input id="FuncApoio" disabled="disabled" value="@if (item.UserApoio != null) {@item.UserApoio.Funcao } " type="text" class="form-control descricao">
+                                                    </div>
+                                                    <div class="form-group col-md-2">
+                                                        Sigla Unidade
+                                                        <input id="SGUndApoio" disabled="disabled" value="@if (item.UserApoio != null) {@item.UserApoio.SiglaUnidade } " type="text" class="form-control descricao">
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        Unidade
+                                                        <input id="UndApoio" disabled="disabled" value="@if (item.UserApoio != null) {@item.UserApoio.NomeUnidade } " type="text" class="form-control descricao">
+                                                    </div>
+                                                </div>
+                                                <div class="col-1 pt-4">
+                                                    <a class="@(firstItem == item ? "btn-remove-item-base" : "btn-remove-item") text-danger" href="javascript:void(0);">
+                                                        <i class="fa fa-trash"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        }
+                                        <button id="btn-add-EquipeApoio" type="button" class="btn btn-success"><i class="fa fa-plus"></i>Equipe Apoio</button>
+                                    }
+
+                                </div>
+                            </div>
+
+                    </fieldset>
+                    <h1>Dados Complementares</h1>
+                    <fieldset>
+                        <div class="card mt-4">
+                            <div class="card-header">Justificativas</div>
+                            <div class="card-body" id="card-body-justificativas">
+
+                                @if (Model.Justificativas.Any())
+                                {
+                                    var firstItem = Model.Justificativas.FirstOrDefault();
+                                    foreach (var item in Model.Justificativas)
+                                    {
+                                        <div class="row justificativas @(firstItem == item ? "base-justificativas" : "")">
+                                            <div class="col-11">
+                                                <div class="form-group">
+                                                    Descrição
+                                                    <input maxlength="1000" value="@item.DESCRICAO" type="text" class="form-control descricao">
+                                                    <input value="@item.CO_JUSTIFICATIVA" type="hidden" class="codigo">
+                                                </div>
+                                            </div>
+                                            <div class="col-1 pt-4">
+                                                <a class="@(firstItem == item ? "btn-remove-item-base" : "btn-remove-item") text-danger" href="javascript:void(0);">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    }
+                                    <button id="btn-add-justificativa" type="button" class="btn btn-success"><i class="fa fa-plus"></i> Justificativa</button>
+                                }
+
+                            </div>
+                        </div>
+                        <br />
+                        <div class="card mt-4">
+                            <div class="card-header">Benefícios</div>
+                            <div class="card-body" id="card-body-beneficios">
+
+                                @if (Model.Beneficios.Any())
+                                {
+                                    var firstItem = Model.Beneficios.FirstOrDefault();
+                                    foreach (var item in Model.Beneficios)
+                                    {
+                                        <div class="row beneficios @(firstItem == item ? "base-beneficios" : "")">
+                                            <div class="col-11">
+                                                <div class="form-group">
+                                                    Descrição
+                                                    <input maxlength="1000" value="@item.DESCRICAO" type="text" class="form-control descricao">
+                                                    <input value="@item.CO_BENEFICIO" type="hidden" class="codigo">
+                                                </div>
+                                            </div>
+                                            <div class="col-1 pt-4">
+                                                <a class="@(firstItem == item ? "btn-remove-item-base" : "btn-remove-item") text-danger" href="javascript:void(0);">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    }
+                                    <button id="btn-add-beneficio" type="button" class="btn btn-success"><i class="fa fa-plus"></i> Benefício</button>
+                                }
+
+                            </div>
+                        </div>
+                        <div class="card mt-4">
+                            <div class="card-header">Escopo</div>
+                            <div class="card-body" id="card-body-escopos">
+
+                                @if (Model.Escopos.Any())
+                                {
+                                    var firstItem = Model.Escopos.FirstOrDefault();
+                                    foreach (var item in Model.Escopos)
+                                    {
+                                        <div class="row escopos @(firstItem == item ? "base-escopos" : "")">
+                                            <div class="col-11">
+                                                <div class="form-group">
+                                                    Descrição
+                                                    <input maxlength="1000" value="@item.DESCRICAO" type="text" class="form-control descricao">
+                                                    <input value="@item.CO_ESCOPO" type="hidden" class="codigo">
+                                                </div>
+                                            </div>
+                                            <div class="col-1 pt-4">
+                                                <a class="@(firstItem == item ? "btn-remove-item-base" : "btn-remove-item") text-danger" href="javascript:void(0);">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    }
+                                    <button id="btn-add-escopo" type="button" class="btn btn-success"><i class="fa fa-plus"></i> Escopo</button>
+                                }
+
+                            </div>
+                        </div>
+
+                        <div class="card mt-4">
+                            <div class="card-header">Não Escopo</div>
+                            <div class="card-body" id="card-body-nao-escopos">
+
+                                @if (Model.NaoEscopos.Any())
+                                {
+                                    var firstItem = Model.NaoEscopos.FirstOrDefault();
+                                    foreach (var item in Model.NaoEscopos)
+                                    {
+                                        <div class="row nao-escopos @(firstItem == item ? "base-nao-escopos" : "")">
+                                            <div class="col-11">
+                                                <div class="form-group">
+                                                    Descrição
+                                                    <input maxlength="1000" value="@item.DESCRICAO" type="text" class="form-control descricao">
+                                                    <input value="@item.CO_NAO_ESCOPO" type="hidden" class="codigo">
+                                                </div>
+                                            </div>
+                                            <div class="col-1 pt-4">
+                                                <a class="@(firstItem == item ? "btn-remove-item-base" : "btn-remove-item") text-danger" href="javascript:void(0);">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    }
+                                    <button id="btn-add-nao-escopo" type="button" class="btn btn-success"><i class="fa fa-plus"></i>Não Escopo</button>
+                                }
+
+                            </div>
+                        </div>
+                        <div class="card mt-4">
+                            <div class="card-header">Premissas</div>
+                            <div class="card-body" id="card-body-premissas">
+
+                                @if (Model.Premissas.Any())
+                                {
+                                    var firstItem = Model.Premissas.FirstOrDefault();
+                                    foreach (var item in Model.Premissas)
+                                    {
+                                        <div class="row premissas @(firstItem == item ? "base-premissas" : "")">
+                                            <div class="col-11">
+                                                <div class="form-group">
+                                                    Descrição
+                                                    <input maxlength="1000" value="@item.DESCRICAO" type="text" class="form-control descricao">
+                                                    <input value="@item.CO_PREMISSA" type="hidden" class="codigo">
+                                                </div>
+                                            </div>
+                                            <div class="col-1 pt-4">
+                                                <a class="@(firstItem == item ? "btn-remove-item-base" : "btn-remove-item") text-danger" href="javascript:void(0);">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    }
+                                    <button id="btn-add-premissa" type="button" class="btn btn-success"><i class="fa fa-plus"></i> Premissa</button>
+                                }
+
+                            </div>
+                        </div>
+                        <div class="card mt-4">
+                            <div class="card-header">Requisitos</div>
+                            <div class="card-body" id="card-body-requisitos">
+
+                                @if (Model.Requisitos.Any())
+                                {
+                                    var firstItem = Model.Requisitos.FirstOrDefault();
+                                    foreach (var item in Model.Requisitos)
+                                    {
+                                        <div class="row requisitos @(firstItem == item ? "base-requisitos" : "")">
+                                            <div class="col-11">
+                                                <div class="form-group">
+                                                    Descrição
+                                                    <input maxlength="1000" value="@item.DESCRICAO" type="text" class="form-control descricao">
+                                                    <input value="@item.CO_REQUISITO" type="hidden" class="codigo">
+                                                </div>
+                                            </div>
+                                            <div class="col-1 pt-4">
+                                                <a class="@(firstItem == item ? "btn-remove-item-base" : "btn-remove-item") text-danger" href="javascript:void(0);">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    }
+                                    <button id="btn-add-requisito" type="button" class="btn btn-success"><i class="fa fa-plus"></i> Requisito</button>
+                                }
+
+                            </div>
+                        </div>
+
+                        <div class="card mt-4">
+                            <div class="card-header">Restrições</div>
+                            <div class="card-body" id="card-body-restricoes">
+
+                                @if (Model.Restricoes.Any())
+                                {
+                                    var firstItem = Model.Restricoes.FirstOrDefault();
+                                    foreach (var item in Model.Restricoes)
+                                    {
+                                        <div class="row restricoes @(firstItem == item ? "base-restricoes" : "")">
+                                            <div class="col-11">
+                                                <div class="form-group">
+                                                    Descrição
+                                                    <input maxlength="1000" value="@item.DESCRICAO" type="text" class="form-control descricao">
+                                                    <input value="@item.CO_RESTRICAO" type="hidden" class="codigo">
+                                                </div>
+                                            </div>
+                                            <div class="col-1 pt-4">
+                                                <a class="@(firstItem == item ? "btn-remove-item-base" : "btn-remove-item") text-danger" href="javascript:void(0);">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    }
+                                    <button id="btn-add-restricao" type="button" class="btn btn-success"><i class="fa fa-plus"></i> Restrição</button>
+                                }
+
+                            </div>
+                        </div>
+
+                        <div class="card mt-4">
+                            <div class="card-header">Riscos</div>
+                            <div class="card-body" id="card-body-riscos">
+
+                                @if (Model.Riscos.Any())
+                                {
+                                    var firstItem = Model.Riscos.FirstOrDefault();
+                                    foreach (var item in Model.Riscos)
+                                    {
+                                        <div class="row riscos @(firstItem == item ? "base-riscos" : "")">
+                                            <div class="col-11">
+                                                <div class="form-group">
+                                                    Descrição
+                                                    <input maxlength="1000" value="@item.DESCRICAO" type="text" class="form-control descricao">
+                                                    <input value="@item.CO_RISCO" type="hidden" class="codigo">
+                                                </div>
+                                            </div>
+                                            <div class="col-1 pt-4">
+                                                <a class="@(firstItem == item ? "btn-remove-item-base" : "btn-remove-item") text-danger" href="javascript:void(0);">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    }
+                                    <button id="btn-add-risco" type="button" class="btn btn-success"><i class="fa fa-plus"></i> Risco</button>
+                                }
+
+                            </div>
+                        </div>
+
+                        <div class="card mt-4">
+                            <div class="card-header">Custos</div>
+                            <div class="card-body" id="card-body-custos">
+
+                                @if (Model.Custos.Any())
+                                {
+                                    var firstItem = Model.Custos.FirstOrDefault();
+                                    foreach (var item in Model.Custos)
+                                    {
+                                        <div class="row custos @(firstItem == item ? "base-custos" : "")">
+                                            <div class="col-9">
+                                                <div class="form-group">
+                                                    Descrição
+                                                    <input maxlength="1000" value="@item.DESCRICAO" type="text" class="form-control descricao">
+                                                    <input value="@item.CO_CUSTO" type="hidden" class="codigo">
+                                                </div>
+                                            </div>
+                                            <div class="col-2">
+                                                <div class="form-group">
+                                                    Valor
+                                                    <input value="@item.VALOR" type="text" class="form-control money-mask valor">
+                                                </div>
+                                            </div>
+                                            <div class="col-1 pt-4">
+                                                <a class="@(firstItem == item ? "btn-remove-item-base" : "btn-remove-item") text-danger" href="javascript:void(0);">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    }
+                                    <button id="btn-add-custo" type="button" class="btn btn-success"><i class="fa fa-plus"></i> Custo</button>
+                                }
+
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal inmodal fade modal-cadastro" id="relaciona-marco" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="max-width:1500px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Nota Marco Entrega</h4>
+            </div>
+            <div id="corpo-relaciona-marco" class="modal-body">
+
+
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+
+        function salvarMarcoRelacionado() {
+
+        
+
+                $.ajax({
+                    url: "/Projetos/salvar-marco-relacionado",
+                    type: 'POST',
+                    data: $("#form-relaciona-marco").serialize(),
+                    success: function (obj) {
+                        $('#corpo-marcos_entrega-relacionado').innerHTML = "";
+                        $('#corpo-marcos_entrega-relacionado').html(obj);
+
+                        
+                    }
+                });
+            atualizaTelaCadastro();
+           
+        }
+        function atualizaTelaCadastro() {
+            var cgcUnd = $("#filtroDropDown_cgcUnd").val();
+            var coProjeto = $("#filtroDropDown_coProjeto").val();
+            $.ajax({
+                url: "/Projetos/marco-relacionado",
+                type: 'POST',
+                data: { projeto: projeto, cgcUnd: cgcUnd, coProjeto: coProjeto },
+                success: function (obj) {
+                    $('#corpo-relaciona-marco').innerHTML = "";
+                    $('#corpo-relaciona-marco').html(obj);
+
+
+                }
+            });
+        }
+
+
+        var indexWizard = 0;
+        if ($("#CO_PROJETO").val() > 0) {
+            indexWizard = 1;
+        }
+
+
+        $(document).ready(function () {
+            carregaInformacoesPatrocinador();
+            carregaInformacoesDemandante();
+            carregaInformacoesGerente();
+            carregarPartesInteressadas();
+            $('.date-picker').datetimepicker({
+                format: 'DD/MM/YYYY',
+                locale: 'pt-br'
+            });
+          
+
+        });
+
+        var wizard = $("#form-projeto").steps({
+            bodyTag: "fieldset",
+            startIndex: indexWizard,
+            onStepChanging: function (event, currentIndex, newIndex) {
+
+
+
+                if (currentIndex > newIndex) {
+                    return true;
+                }
+                salvarFormRescunho();
+
+                var form = $(this);
+
+                if (currentIndex < newIndex) {
+                    // To remove error styles
+                    $(".body:eq(" + newIndex + ") label.error", form).remove();
+                    $(".body:eq(" + newIndex + ") .error", form).removeClass("error");
+                }
+
+                form.validate().settings.ignore = ":disabled,:hidden";
+
+                return form.valid();
+            },
+            onStepChanged: function (event, currentIndex, priorIndex) {
+
+
+                if (currentIndex === 2 && priorIndex === 3) {
+                    $(this).steps("previous");
+                }
+            
+            },
+            onFinishing: function (event, currentIndex) {
+                var form = $(this);
+
+                form.validate().settings.ignore = ":disabled,:hidden";
+
+                return form.valid();
+            },
+            onFinished: function (event, currentIndex) {
+                var form = $(this);
+                salvarForm();
+                // Submit form input
+                //form.submit();
+            }
+        }).validate({
+            errorPlacement: function (error, element) {
+                element.before(error);
+            },
+            rules: {
+                confirm: {
+                    equalTo: "#password"
+                }
+            }
+            });
+       
+
+        $(function () {
+
+            $('#btn-add-objetivo').click(function () {
+                console.log("Objetivo!!!!")
+                eventAddNewItem('objetivos');
+            });
+
+            $('#btn-add-requisito').click(function () {
+                eventAddNewItem('requisitos');
+            });
+
+            $('#btn-add-escopo').click(function () {
+                eventAddNewItem('escopos');
+            });
+
+            $('#btn-add-nao-escopo').click(function () {
+                eventAddNewItem('nao-escopos');
+            });
+
+            $('#btn-add-EquipeApoio').click(function () {
+                eventAddNewItem('EquipeApoio');
+            });
+
+            $('#btn-add-parteInteressada').click(function () {
+
+                eventAddNewItem('parteInteressada');
+            });
+
+            $('#btn-add-custo').click(function () {
+                eventAddNewItem('custos', true);
+            });
+
+            $('#btn-add-justificativa').click(function () {
+                eventAddNewItem('justificativas');
+            });
+
+            $('#btn-add-restricao').click(function () {
+                eventAddNewItem('restricoes');
+            });
+
+            $('#btn-add-risco').click(function () {
+                eventAddNewItem('riscos');
+            });
+
+            $('#btn-add-beneficio').click(function () {
+                eventAddNewItem('beneficios');
+            });
+
+            $('#btn-add-premissa').click(function () {
+                eventAddNewItem('premissas');
+            });
+
+            $('#btn-add-marcos-entrega').click(function () {
+                eventAddNewItemMarcosEntraga();
+            });
+
+            $('#btn-add-marcos-entrega-relacionado').click(function () {
+                eventAddNewItemMarcosEntregaRelacionado();
+            });
+
+            $('#btn-add-arquivo').click(function () {
+                eventAddNewItem('arquivos');
+            });
+
+            $('.card-body').on('click', '.btn-remove-item-base', function () {
+                var $item = $(this).parent().parent();
+                $item.find('input').val('');
+                $item.find('select').val('');
+            });
+
+            $('.card-body').on('click', '.btn-remove-item', function () {
+                var $item = $(this).parent().parent();
+                $item.remove();
+            });
+
+            $('#MATRICULA_PATROCINADOR').on('change', function () {
+                carregaInformacoesPatrocinador();
+            })
+
+            $('#GESTOR_DEMANDANTE').on('change', function () {
+                carregaInformacoesDemandante();
+            })
+
+            $('#MATRICULA_GERENTE').on('change', function () {
+                carregaInformacoesGerente();
+            })
+
+
+            $('.ParteInteressada-newInput').on('change', function () {
+                carregaNovaParte();
+            })
+
+
+        });
+
+
+        function salvarForm() {
+            var $form = $('#form-projeto');
+            var url = $form.attr('action');
+
+            var formData = new FormData();
+            formData.append("__RequestVerificationToken", $('input[name="__RequestVerificationToken"]').val());
+            formData.append("CO_PROJETO", $form.find('#CO_PROJETO').val());
+            formData.append("NOME", $form.find('#NOME').val());
+            formData.append("CO_PROJETO_PAI", $form.find('#CO_PROJETO_PAI').val());
+            formData.append("DESCRICAO", $form.find('#DESCRICAO').val());
+            formData.append("DT_INICIO", $form.find('#DT_INICIO').val());
+            formData.append("DT_FIM", $form.find('#DT_FIM').val());
+            formData.append("GESTOR_DEMANDANTE", $form.find('#GESTOR_DEMANDANTE').val());
+            formData.append("MATRICULA_PATROCINADOR", $form.find('#MATRICULA_PATROCINADOR').val());
+            formData.append("MATRICULA_GERENTE", $form.find('#MATRICULA_GERENTE').val());
+            formData.append("CO_TIPO", $form.find('#CO_TIPO').val());
+            formData.append("CO_COMPLEXIDADE", $form.find('#CO_COMPLEXIDADE').val());
+            formData.append("CO_CATEGORIA", $form.find('#CO_CATEGORIA').val());
+            formData.append("CO_PRIORIDADE", $form.find('#CO_PRIORIDADE').val());
+            formData.append("CO_STATUS", $form.find('#CO_STATUS').val());
+            formData.append("PERCENTUAL", $form.find('#PERCENTUAL').val());
+            formData.append("CAIXA_POSTAL", $form.find('#CAIXA_POSTAL').val());
+            formData.append("OBSERVACAO", $form.find('#OBSERVACAO').val());
+            formData.append("LINK_DOCUMENTACAO", $form.find('#LINK_DOCUMENTACAO').val());
+            formData.append("IS_RASCUNHO", false);
+
+            formData = addItensForm('objetivos', formData, 'Objetivos', 'OBJETIVO');
+            formData = addItensForm('custos', formData, 'Custos', 'CUSTO', true);
+            formData = addItensForm('justificativas', formData, 'Justificativas', 'JUSTIFICATIVA');
+            formData = addItensForm('restricoes', formData, 'Restricoes', 'RESTRICAO');
+            formData = addItensForm('riscos', formData, 'Riscos', 'RISCO');
+            formData = addItensForm('beneficios', formData, 'Beneficios', 'BENEFICIO');
+            formData = addItensForm('premissas', formData, 'Premissas', 'PREMISSA');
+            formData = addItensMarcosEntregaForm(formData);
+            formData = addItensMarcosEntregaRelacionadoForm(formData);
+            formData = addItensForm('parteInteressada', formData, 'PartesInteressadas', 'PARTE');
+            formData = addItensForm('EquipeApoio', formData, 'EquipeApoio', 'APOIO');
+            formData = addItensForm('requisitos', formData, 'Requisitos', 'REQUISITO');
+            formData = addItensForm('escopos', formData, 'Escopos', 'ESCOPOS');
+            formData = addItensForm('nao-escopos', formData, 'NaoEscopos', 'NAOESCOPO');
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false
+            }).done(function (data) {
+                var mensagem = data.data.mensagem;
+                var url = data.data.url;
+                toastr.options = {
+                    "progressBar": true,
+                    "positionClass": "toast-bottom-right"
+                }
+                toastr["success"](mensagem)
+                //setTimeout(function () { window.location.href = url; }, 1000);
+                window.location.reload();
+            }).fail(function (error) {
+                console.error(error);
+                if (error.status == 400) {
+                    var errors = error.responseJSON.errors;
+                    errorSummary(errors, '#errors-summary');
+                    toTop();
+                }
+            });
+        }
+
+        function salvarFormRescunho() {
+            var $form = $('#form-projeto');
+            var url = $form.attr('action');
+            if ($form.find('#CO_PROJETO').val() == 0) {
+
+
+            var formData = new FormData();
+            formData.append("__RequestVerificationToken", $('input[name="__RequestVerificationToken"]').val());
+            formData.append("CO_PROJETO", $form.find('#CO_PROJETO').val());
+            formData.append("NOME", $form.find('#NOME').val());
+                formData.append("CO_PROJETO_PAI", $form.find('#CO_PROJETO_PAI').val());
+                formData.append("IS_RASCUNHO", true);
+       
+
+            formData.append("GESTOR_DEMANDANTE", $form.find('#GESTOR_DEMANDANTE').val());
+            formData.append("MATRICULA_PATROCINADOR", $form.find('#MATRICULA_PATROCINADOR').val());
+            formData.append("MATRICULA_GERENTE", $form.find('#MATRICULA_GERENTE').val());
+            formData.append("CO_TIPO", $form.find('#CO_TIPO').val());
+            formData.append("CO_COMPLEXIDADE", $form.find('#CO_COMPLEXIDADE').val());
+            formData.append("CO_CATEGORIA", $form.find('#CO_CATEGORIA').val());
+            formData.append("CO_PRIORIDADE", $form.find('#CO_PRIORIDADE').val());
+
+
+
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false
+            }).done(function (data) {
+                var mensagem = data.data.mensagem;
+                var url = data.data.url;
+                toastr.options = {
+                    "progressBar": true,
+                    "positionClass": "toast-bottom-right"
+                }
+                //toastr["success"](mensagem)
+                setTimeout(function () { window.location.href = url; }, 1000);
+                window.location.reload();
+            }).fail(function (error) {
+                console.error(error);
+                if (error.status == 400) {
+                    var errors = error.responseJSON.errors;
+                    errorSummary(errors, '#errors-summary');
+                    toTop();
+                }
+            });
+            }
+        }
+
+        function eventAddNewItem(elementBase, isMoney = false) {
+            var $novoItem = $('.base-' + elementBase).clone();
+
+            $novoItem.removeClass('base-' + elementBase);
+            $novoItem.addClass('base-' + elementBase + '-New');
+            $novoItem.find('input').val('');
+            $novoItem.find('input').addClass(elementBase + '-newInput');
+            $novoItem.find('.btn-remove-item-base').removeClass('btn-remove-item-base').addClass('btn-remove-item');
+
+            $($novoItem).insertAfter('#card-body-' + elementBase + ' .' + elementBase + ':last');
+
+            if (isMoney)
+                $('.money-mask').mask("#.##0,00", { reverse: true });
+        }
+
+        function eventAddNewItemMarcosEntraga() {
+            var elementBase = 'marcos-entregas';
+            var $novoItem = $('.base-' + elementBase).clone();
+
+            $novoItem.removeClass('base-' + elementBase);
+            $novoItem.addClass('base-' + elementBase + '-New');
+            $novoItem.find('input').val('');
+            $novoItem.find('input').addClass(elementBase + '-newInput');
+            $novoItem.find('.btn-remove-item-base').removeClass('btn-remove-item-base').addClass('btn-remove-item');
+
+            var idAtividade = 'Atividades-Entrega-' + Math.floor((Math.random() * 100) + 1);
+         
+
+            $novoItem.find('.open-modal-atividade').attr('data-target', '#' + idAtividade);
+            $novoItem.find('.modal-atividade').attr('id', idAtividade);
+
+            $novoItem.find('.base-atividade-marcos-entregas input').val('');
+            $novoItem.find('.base-atividade-marcos-entregas select').val('');
+            $novoItem.find('.base-atividade-marcos-entregas .btn-remove-item-base').removeClass('btn-remove-item-base').addClass('btn-remove-item');
+            $novoItem.find('.atividade-marcos-entregas').not('.base-atividade-marcos-entregas').remove();
+
+            $($novoItem).insertAfter('#card-body-' + elementBase + ' .' + elementBase + ':last');
+
+            reloadCalendar();
+        }
+
+        function eventAddNewItemMarcosEntregaRelacionado() {
+            var elementBase = 'marcos-entregas-relacionado';
+            var $novoItem = $('.base-' + elementBase).clone();
+
+            $novoItem.removeClass('base-' + elementBase);
+            $novoItem.addClass('base-' + elementBase + '-New');
+            $novoItem.find('input').val('');
+            $novoItem.find('input').addClass(elementBase + '-newInput');
+            $novoItem.find('.btn-remove-item-base').removeClass('btn-remove-item-base').addClass('btn-remove-item');
+
+            var idAtividade = 'Atividades-Entrega-' + Math.floor((Math.random() * 100) + 1);
+
+
+            $novoItem.find('.open-modal-atividade').attr('data-target', '#' + idAtividade);
+            $novoItem.find('.modal-atividade').attr('id', idAtividade);
+
+            $novoItem.find('.base-atividade-marcos-entregas input').val('');
+            $novoItem.find('.base-atividade-marcos-entregas select').val('');
+            $novoItem.find('.base-atividade-marcos-entregas .btn-remove-item-base').removeClass('btn-remove-item-base').addClass('btn-remove-item');
+            $novoItem.find('.atividade-marcos-entregas').not('.base-atividade-marcos-entregas').remove();
+
+            $($novoItem).insertAfter('#card-body-' + elementBase + ' .' + elementBase + ':last');
+
+            reloadCalendar();
+        }
+
+        function eventAddNewItemAtividadeMarco(el) {
+            var $this = $(el);
+            var elementBase = 'atividade-marcos-entregas';
+            var $novoItem = $this.parent().find('.base-' + elementBase).clone();
+
+            $novoItem.removeClass('base-' + elementBase);
+            $novoItem.addClass('base-' + elementBase + '-New');
+            $novoItem.find('input').val('');
+            $novoItem.find('input').addClass(elementBase + '-newInput');
+            $novoItem.find('.btn-remove-item-base').removeClass('btn-remove-item-base').addClass('btn-remove-item');
+
+            $($novoItem).insertAfter($this.parent().find('.' + elementBase + ':last'));
+
+            reloadCalendar();
+        }
+
+        function eventAddNewItemAtividadeMarcoRelacionado(el) {
+            var $this = $(el);
+            var elementBase = 'atividade-marcos-entregas-relacionado';
+            var $novoItem = $this.parent().find('.base-' + elementBase).clone();
+
+            $novoItem.removeClass('base-' + elementBase);
+            $novoItem.addClass('base-' + elementBase + '-New');
+            $novoItem.find('input').val('');
+            $novoItem.find('input').addClass(elementBase + '-newInput');
+            $novoItem.find('.btn-remove-item-base').removeClass('btn-remove-item-base').addClass('btn-remove-item');
+
+            $($novoItem).insertAfter($this.parent().find('.' + elementBase + ':last'));
+
+            reloadCalendar();
+        }
+
+
+        function carregaInformacoesPatrocinador() {
+            var mat = $("#MATRICULA_PATROCINADOR").val();
+            $.ajax({
+                type: 'POST',
+                url: "/Projetos/ObterUsuario",
+                data: {
+                    matricula: mat
+                },
+                success: function (data) {
+                    if (data != null) {
+                        $("#nome-patrocinador").val(data.nome);
+                        $("#und-patrocinador").val(data.nomeUnidade);
+                        $("#sg-und-patrocinador").val(data.codigoUnidade + "-" + data.siglaUnidade);
+                        $("#func-patrocinador").val(data.funcao);
+                    }
+                }
+            });
+        }
+
+        function carregaInformacoesDemandante() {
+            var mat = $("#GESTOR_DEMANDANTE").val();
+            $.ajax({
+                type: 'POST',
+                url: "/Projetos/ObterUsuario",
+                data: {
+                    matricula: mat
+                },
+                success: function (data) {
+                    if (data != null) {
+                        $("#nome-demandante").val(data.nome);
+                        $("#sg-und-demandante").val(data.codigoUnidade + "-" + data.siglaUnidade);
+                        $("#und-demandante").val(data.nomeUnidade);
+                        $("#func-demandante").val(data.funcao);
+                    }
+                }
+            });
+        }
+
+        function carregaInformacoesGerente() {
+            var mat = $("#MATRICULA_GERENTE").val();
+            console.log(mat);
+            $.ajax({
+                type: 'POST',
+                url: "/Projetos/ObterUsuario",
+                data: {
+                    matricula: mat
+                },
+                success: function (data) {
+                    if (data != null) {
+                        $("#nome-gerente").val(data.nome);
+                        $("#sg-und-gerente").val(data.codigoUnidade + "-" + data.siglaUnidade);
+                        $("#und-gerente").val(data.nomeUnidade);
+                        $("#func-gerente").val(data.funcao);
+                    }
+                }
+            });
+        }
+
+        function carregarPartesInteressadas(element) {
+            $element = $(element);
+            var und = $element.val();
+            $.ajax({
+                type: 'POST',
+                url: "/Projetos/obterUnd",
+                data: {
+                    unidade: und
+                },
+                success: function (data) {
+                    var $bloco = $element.parent().parent();
+                    if (data != null) {
+
+
+                        $bloco.find('#nomeUnd').val(data.nO_UNIDADE);
+                        $bloco.find('#sgUnd').val(data.sG_SIGLA);
+                        $bloco.find('#GestorUnd').val(data.nO_RESPONSAVEL);
+                    } else {
+                        $bloco.find('#nomeUnd').val('');
+                        $bloco.find('#sgUnd').val('');
+                        $bloco.find('#GestorUnd').val('');
+
+                    }
+                }
+            });
+
+        }
+
+        function carregaApoio(element) {
+            $element = $(element);
+            var mat = $element.val();
+            $.ajax({
+                type: 'POST',
+                url: "/Projetos/obterUsuario",
+                data: {
+                    matricula: mat
+                },
+                success: function (data) {
+                    var $bloco = $element.parent().parent();
+                    if (data != null) {
+
+
+                        $bloco.find('#nomeApoio').val(data.nome);
+                        $bloco.find('#FuncApoio').val(data.funcao);
+                        $bloco.find('#UndApoio').val(data.nomeUnidade);
+                        $bloco.find('#SGUndApoio').val(data.siglaUnidade);
+                    } else {
+                        $bloco.find('#nomeUnd').val('');
+                        $bloco.find('#sgUnd').val('');
+                        $bloco.find('#GestorUnd').val('');
+                    }
+                }
+            });
+        }
+
+        function addItensForm(itensNome, formData, objetoNome, posFixoCodigo, incluirValor = false) {
+            $('.' + itensNome).each(function (index, el) {
+                var $element = $(el);
+                var descricao = $element.find('.descricao').val();
+                var codigo = $element.find('.codigo').val();
+                var cgc = $element.find('.cgc_und').val();
+                var mat = $element.find('.matricula').val();
+                var dtPrevisao = $element.find('.dt-previsao').val();
+                var statusEntrega = $element.find('.status-entrega').val();
+                var tipoEntrega = $element.find('.tipo-entrega').val();
+                var matResponsavel = $element.find('.responsavel').val();
+
+                if (itensNome == 'parteInteressada' && cgc == 0) {
+                    return formData;
+                }
+
+                if (itensNome == 'EquipeApoio' && mat == '') {
+                    return formData;
+                }
+
+                if (descricao != '' && mat == null) {
+
+                    formData.append(objetoNome + '[' + index + '].DESCRICAO', descricao);
+                    formData.append(objetoNome + '[' + index + '].CO_' + posFixoCodigo, codigo);
+
+                    if (incluirValor) {
+                        var valor = $element.find('.valor').val();
+                        formData.append(objetoNome + '[' + index + '].VALOR', valor);
+                    }
+
+                    if (dtPrevisao != null) {
+                        formData.append(objetoNome + '[' + index + '].DT_PREVISAO', dtPrevisao);
+
+                    }
+                    if (statusEntrega != null) {
+                        formData.append(objetoNome + '[' + index + '].STATUS', statusEntrega);
+
+                    }
+                    if (matResponsavel != null) {
+                        formData.append(objetoNome + '[' + index + '].MATRICULA_RESPONSAVEL', matResponsavel);
+
+                    }
+                    if (tipoEntrega != null) {
+                        formData.append(objetoNome + '[' + index + '].CO_TIPO_MARCOS_ENTREGA', tipoEntrega);
+                    }
+                }
+                if (mat != null) {
+                    formData.append(objetoNome + '[' + index + '].MATRICULA', mat);
+                    formData.append(objetoNome + '[' + index + '].CO_' + posFixoCodigo, codigo);
+                }
+
+                if (cgc != null) {
+                    formData.append(objetoNome + '[' + index + '].CGC_UND', cgc);
+                    formData.append(objetoNome + '[' + index + '].CO_' + posFixoCodigo, codigo);
+                }
+            });
+            return formData;
+        }
+
+        function addItensMarcosEntregaForm(formData) {
+            $('.marcos-entregas').each(function (index, el) {
+                var $element = $(el);
+                var descricao = $element.find('.descricao').val();
+                var nota = $element.find('.nota').val();
+                var codigo = $element.find('.codigo').val();
+                var dataPrevisao = $element.find('.dt-previsao').val();
+      
+                var statusEntrega = $element.find('.status-entrega').val();
+                var responsavel = $element.find('.responsavel').val();
+                var tipoEntrega = $element.find('.tipo-entrega').val();
+
+                if (descricao != '') {
+                    formData.append('MarcosEntregas[' + index + '].DESCRICAO', descricao);
+                    formData.append('MarcosEntregas[' + index + '].NOTA', nota);
+                    formData.append('MarcosEntregas[' + index + '].CO_MARCOS_ENTREGA', codigo);
+                    formData.append('MarcosEntregas[' + index + '].CO_TIPO_MARCOS_ENTREGA', tipoEntrega);
+                    formData.append('MarcosEntregas[' + index + '].MATRICULA_RESPONSAVEL', responsavel);
+                    formData.append('MarcosEntregas[' + index + '].DT_PREVISAO', dataPrevisao);
+                    formData.append('MarcosEntregas[' + index + '].STATUS', statusEntrega);
+
+                    $element.find('.atividade-marcos-entregas').each(function (index2, el2) {
+                        var $elementAt = $(el2);
+                        var descricaoAt = $elementAt.find('.descricao').val();
+                        var codigoAt = $elementAt.find('.codigo').val();
+                        var dataIniPrev = $elementAt.find('.dt-ini-previsto').val();
+                        var dataFimPrev = $elementAt.find('.dt-fim-previsto').val();
+                        var dataFimReal = $elementAt.find('.dt-fim-real').val();
+                        var statusAtividade = $elementAt.find('.status-atividade').val();
+                        var responsavelAt = $elementAt.find('.responsavel').val();
+
+                        formData.append('MarcosEntregas[' + index + '].AtividadesEntregas[' + index2 + '].DESCRICAO', descricaoAt);
+                        formData.append('MarcosEntregas[' + index + '].AtividadesEntregas[' + index2 + '].CO_ATIVIDADES_ENTREGA', codigoAt);
+                        formData.append('MarcosEntregas[' + index + '].AtividadesEntregas[' + index2 + '].CO_MARCOS_ENTREGA', codigo);
+                        formData.append('MarcosEntregas[' + index + '].AtividadesEntregas[' + index2 + '].DT_INICIO_PREVISTO', dataIniPrev);
+                        formData.append('MarcosEntregas[' + index + '].AtividadesEntregas[' + index2 + '].DT_FIM_PREVISTO', dataFimPrev);
+                        formData.append('MarcosEntregas[' + index + '].AtividadesEntregas[' + index2 + '].DT_FIM_REAL', dataFimReal);
+                        formData.append('MarcosEntregas[' + index + '].AtividadesEntregas[' + index2 + '].STATUS', statusAtividade);
+                        formData.append('MarcosEntregas[' + index + '].AtividadesEntregas[' + index2 + '].MAT_RESPONSAVEL', responsavelAt);
+                    });
+                }
+            });
+            return formData;
+        }
+
+
+        function addItensMarcosEntregaRelacionadoForm(formData) {
+            $('.marcos-entregas-relacionado').each(function (index, el) {
+                var $element = $(el);
+         
+                var nota = $element.find('.nota').val();
+                var codigo = $element.find('.codigo').val();
+                
+                var coProjeto = $("#CO_PROJETO").val();
+             
+                var responsavel = $element.find('.responsavel').val();
+        
+
+                if (codigo != '') {
+                    formData.append('MarcosEntregasRelacionado[' + index + '].CO_PROJETO', coProjeto);
+                    formData.append('MarcosEntregasRelacionado[' + index + '].NOTA', nota);
+                    formData.append('MarcosEntregasRelacionado[' + index + '].CO_MARCOS_ENTREGA', codigo);
+               
+                    formData.append('MarcosEntregasRelacionado[' + index + '].MAT_RESPONSAVEL', responsavel);
+   
+
+                    $element.find('.atividade-marcos-entregas-relacionado').each(function (index2, el2) {
+                        var $elementAt = $(el2);
+                        var descricaoAt = $elementAt.find('.descricao').val();
+                        var codigoAt = $elementAt.find('.codigo').val();
+                        var dataIniPrev = $elementAt.find('.dt-ini-previsto').val();
+                        var dataFimPrev = $elementAt.find('.dt-fim-previsto').val();
+                        var dataFimReal = $elementAt.find('.dt-fim-real').val();
+                        var statusAtividade = $elementAt.find('.status-atividade').val();
+                        var responsavelAt = $elementAt.find('.responsavel').val();
+
+                        formData.append('MarcosEntregasRelacionado[' + index + '].AtividadesEntregas[' + index2 + '].DESCRICAO', descricaoAt);
+                        formData.append('MarcosEntregasRelacionado[' + index + '].AtividadesEntregas[' + index2 + '].CO_ATIVIDADES_ENTREGA', codigoAt);
+                        formData.append('MarcosEntregasRelacionado[' + index + '].AtividadesEntregas[' + index2 + '].CO_MARCOS_ENTREGA', codigo);
+                        formData.append('MarcosEntregasRelacionado[' + index + '].AtividadesEntregas[' + index2 + '].DT_INICIO_PREVISTO', dataIniPrev);
+                        formData.append('MarcosEntregasRelacionado[' + index + '].AtividadesEntregas[' + index2 + '].DT_FIM_PREVISTO', dataFimPrev);
+                        formData.append('MarcosEntregasRelacionado[' + index + '].AtividadesEntregas[' + index2 + '].DT_FIM_REAL', dataFimReal);
+                        formData.append('MarcosEntregasRelacionado[' + index + '].AtividadesEntregas[' + index2 + '].STATUS', statusAtividade);
+                        formData.append('MarcosEntregasRelacionado[' + index + '].AtividadesEntregas[' + index2 + '].MAT_RESPONSAVEL', responsavelAt);
+                    });
+                }
+            });
+            return formData;
+        }
+
+        function reloadCalendar() {
+            $('.date-picker').datetimepicker({
+                format: 'DD/MM/YYYY',
+                locale: 'pt-br'
+            });
+        }
+    </script>
+}

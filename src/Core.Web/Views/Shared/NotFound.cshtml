@@ -1,0 +1,18 @@
+﻿@{
+    ViewData["Title"] = "Não encontrado";
+    Layout = "_LayoutError";
+}
+
+<div class="mx-auto shadow-lg p-5 mt-5 bg-white rounded text-center" style="width: 600px;">
+    <div class="big-content text-center">
+        <i class="fas fa-search-minus text-warning" style="font-size: 14em;"></i>
+    </div>
+    <h1 class="text-warning mt-4">Oops! Não encontrado</h1>
+    <p>
+        A página que você estava procurando não existe.<br>
+        Achamos que a página pode ter sido movida.
+    </p>
+    <p>
+        <a asp-action="Index" asp-controller="Home">Voltar para início</a>
+    </p>
+</div>

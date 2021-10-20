@@ -1,0 +1,34 @@
+@model Core.Business.ViewModels.Projetos.ProjetoViewModel
+
+@{
+    ViewData["Module"] = "Projetos";
+    ViewData["Title"] = "Excluir projeto";
+}
+
+<div class="card">
+    <div class="card-header">@ViewData["Title"]</div>
+    <div class="card-body">   
+
+        @await Component.InvokeAsync("Summary")
+
+        <h4>Deseja realmente excluir este projeto?</h4>
+
+        <div class="row">
+        <div class="col-6">
+            <dl class="row">
+                <dt class="col-sm-3">@Html.DisplayNameFor(x => x.NOME)</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(x => x.NOME)</dd>
+
+                <dt class="col-sm-3">@Html.DisplayNameFor(x => x.DESCRICAO)</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(x => x.DESCRICAO)</dd>
+            </dl>             
+            
+            <form asp-action="Delete">
+                <input asp-for="CO_PROJETO" type="hidden"> 
+                <button class="btn btn-danger" type="submit">Sim, excluir</button>
+                <a class="btn btn-secondary" asp-action="Index">Cancelar</a>
+            </form>   
+        </div>   
+        </div>   
+    </div>
+</div>

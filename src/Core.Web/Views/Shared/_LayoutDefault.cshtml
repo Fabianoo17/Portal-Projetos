@@ -1,0 +1,162 @@
+﻿@{
+    var user = this.GetUserCustom();
+    bool isEnvironmentDev = this.IsEnvironmentDev();
+}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@ViewData["Title"] @ViewData["Module"] - Portal Projetos</title>
+
+    <link rel="shortcut icon" href="~/themes/default/img/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="~/themes/default/img/favicon.ico" type="image/x-icon">
+    <link href="~/libs/steps/css/jquery.steps.css" rel="stylesheet"/>
+    <link href="~/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/vendor/@@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/vendor/metismenu/metisMenu.min.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/vendor/toastr/toastr.min.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/vendor/select2/css/select2.min.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/vendor/pc-bootstrap4-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/themes/default/css/styles.min.css" rel="stylesheet" asp-append-version="true">
+
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-caixa mb-4 shadow">
+        <a class="navbar-brand" asp-action="Index" asp-controller="Home">
+            <img src="~/themes/default/img/logo-caixa.png"> &nbsp;&nbsp;&nbsp; <span>Portal Projetos</span>
+        </a>
+        @if (isEnvironmentDev)
+        {
+            <text>&nbsp; &nbsp;</text>
+            <span class="text-warning font-weight-bold">{Ambiente de Desenvolvimento/Homologação}</span>
+        }
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav mr-auto"></ul>
+            <span class="navbar-text text-white">
+                @if (user.IsAuthenticated())
+                {
+                    <text>
+                        <i class="fas fa-user-circle"></i> @user.Nome | @user.UnidadeNome
+                    </text>
+                }
+            </span>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <aside class="col-md-2">
+                <nav class="sidebar-nav shadow">
+                    <ul class="metismenu" id="metismenu">
+                        <li class="@Html.GetActiveRoute("Index", "Home")">
+                            <a asp-action="Index" asp-controller="Home">Principal</a>
+                        </li>
+                        @if (this.CustomAuthorize(new[] { EPerfil.Administrador }))
+                        {
+                            <li class="@Html.GetActiveRoute("Index", "GestaoAcesso")">
+                                <a asp-action="Index" asp-controller="GestaoAcesso">Usuários</a>
+                            </li>
+                        }
+                        @if (this.CustomAuthorize(new[] { EPerfil.Gerente }))
+                        {
+                            <li class="@Html.GetActiveRoute("Vinculacao", "GestaoAcesso", false)">
+                                <a asp-action="Vinculacao" asp-controller="GestaoAcesso">Vinculação</a>
+                            </li>
+                        }
+                        <li class="@Html.GetActiveRoute("Index", "Projetos", false)">
+                            <a asp-action="Index" asp-controller="Projeto">Projetos</a>
+                        </li>
+                        @*<li class="mm-@Html.GetActiveRoute("Index", "Projeto")">
+                            <a class="has-arrow" href="#" aria-expanded="false">Projetos</a>
+                            <ul class="mm-collapse">
+                                <li class="@Html.GetActiveRoute("Index", "Projeto")">
+                                    <a asp-action="Index" asp-controller="Projeto">Cadastro</a>
+                                </li>
+                            </ul>
+                        </li>*@
+                    </ul>
+                </nav>
+            </aside>
+
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2">
+                    <h1 class="h3">@ViewData["Module"]</h1>
+                    <breadcrumb></breadcrumb>
+                </div>
+           
+
+                @RenderBody()
+             
+            </main>
+        </div>
+    </div>
+
+    <footer class="bg-white mt-4 footer">
+        <div class="text-center my-auto p-2">
+            <span>&copy; @DateTime.Now.ToString("yyyy") CETEC - CN TECNOLOGIA DA INFORMAÇÃO</span>
+        </div>
+    </footer>
+
+    <span id="url-pesquisar-usuarios" style="display: none;" data-url="@Url.Action("PesquisarUsuarios", "GestaoAcesso", new { Area = "" })"></span>
+    <span id="message-success" style="display: none;" data-message="@TempData["Success"]"></span>
+    <span id="message-error" style="display: none;" data-message="@TempData["Error"]"></span>
+
+    <script src="~/vendor/jquery/jquery.min.js" asp-append-version="true"></script>
+    <script src="~/vendor/jquery.easing/jquery.easing.min.js" asp-append-version="true"></script>
+    <script src="~/vendor/popper.js/umd/popper.min.js" asp-append-version="true"></script>
+    <script src="~/vendor/bootstrap/js/bootstrap.min.js" asp-append-version="true"></script>
+    <script src="~/vendor/moment/moment-with-locales.min.js" asp-append-version="true"></script>
+    <script src="~/libs/steps/js/jquery.steps.min.js"></script>
+    <script src="~/libs/modernizr/modernizr-custom.js" asp-append-version="true"></script>
+    <script src="~/vendor/metismenu/metisMenu.min.js" asp-append-version="true"></script>
+    <script src="~/vendor/jquery-blockui/jquery.blockUI.js" asp-append-version="true"></script>
+    <script src="~/vendor/toastr/toastr.min.js" asp-append-version="true"></script>
+    <script src="~/vendor/select2/js/select2.full.min.js" asp-append-version="true"></script>
+    <script src="~/vendor/select2/js/i18n/pt-BR.js" asp-append-version="true"></script>
+    <script src="~/vendor/jquery-mask-plugin/jquery.mask.min.js" asp-append-version="true"></script>
+    @*<link href="~/libs/site.css" rel="stylesheet" />*@
+    <script src="~/vendor/pc-bootstrap4-datetimepicker/js/bootstrap-datetimepicker.min.js" asp-append-version="true"></script>
+
+    @*<script src="~/themes/default/js/scripts.min.js" asp-append-version="true"></script>*@
+
+    @RenderSection("Scripts", required: false)
+
+    <script>
+
+
+        $(function () {
+
+            // message success
+            var messageSuccess = $('#message-success').data('message');
+            if (messageSuccess != '') {
+                toastr.options = {
+                    "closeButton": true,
+                    "progressBar": true,
+                    "positionClass": "toast-bottom-right"
+                }
+                toastr["success"](messageSuccess);
+            }
+
+            // message error
+            var messageError = $('#message-error').data('message');
+            if (messageError != '') {
+                toastr.options = {
+                    "closeButton": true,
+                    "progressBar": true,
+                    "timeOut": "10000",
+                    "positionClass": "toast-bottom-right"
+                }
+                toastr["error"](messageError);
+            }
+        });
+    </script>
+</body>
+</html>

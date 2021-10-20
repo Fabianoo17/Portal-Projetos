@@ -1,0 +1,251 @@
+﻿@model Core.Business.ViewModels.Projetos.ProjetoViewModel
+@{
+    Layout = null;
+    bool isAdminstrador = this.CustomAuthorize(new[] { EPerfil.Administrador });
+}
+
+
+<div class="card mt-4">
+    <div class="card-header">Marcos de Entregas Relacionados</div>
+    <div class="card-body" id="card-body-marcos-entregas-relacionado">
+
+        @if (Model.MarcosEntregasRelacionado.Any())
+        {
+            var firstItem = Model.MarcosEntregasRelacionado.FirstOrDefault();
+            foreach (var item in Model.MarcosEntregasRelacionado)
+            {
+                <div class="row marcos-entregas-relacionado @(firstItem == item ? "base-marcos-entregas-relacionado" : "")">
+                    <div class="col-11 row">
+                        <div class="form-group col-4">
+                            Descrição
+                            
+                            <select disabled asp-for="@item.CO_MARCOS_ENTREGA" class="form-control codigo">
+                                <option value="">Selecione</option>
+                                @foreach (var marco in Model.marcosEntregasAtivos.Where(x => x.IS_ATIVO || (x.CO_MARCOS_ENTREGA == item.CO_MARCOS_ENTREGA)))
+                                {
+                                    <option value="@marco.CO_MARCOS_ENTREGA">@marco.DESCRICAO</option>
+                                }
+                            </select>
+                            <span asp-validation-for="@item.CO_MARCOS_ENTREGA" class="text-danger"></span>
+                            @*<input value="@item.CO_MARCOS_ENTREGA" type="hidden" class="codigo">*@
+                        </div>
+
+                        <div class="form-group col-md-2">
+                            Data de Previsão
+                            <input disabled value="@(item.MarcosEntrega.DT_PREVISAO != null ? item.MarcosEntrega.DT_PREVISAO.ToString().Substring(0,10):"")" type="datetime" class="form-control date-picker date-mask dt-previsao" />
+                            @*<span asp-validation-for="@item.DT_PREVISAO" class="text-danger"></span>*@
+                        </div>
+
+                        <div class="form-group col-md-2">
+                            Situação da Entrega
+                            <select disabled asp-for="@item.MarcosEntrega.STATUS" class="form-control status-entrega" asp-items="@ViewBag.DropDownStatus">
+                                <option value="">Selecione</option>
+                            </select>
+                            <span asp-validation-for="@item.MarcosEntrega.STATUS" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2">
+                            Responsável
+                            <select asp-for="@item.MAT_RESPONSAVEL" class="form-control responsavel" asp-items="@ViewBag.Responsavel">
+                                <option value="">Selecione</option>
+                            </select>
+                            <span asp-validation-for="@item.MAT_RESPONSAVEL" class="text-danger"></span>
+                        </div>
+
+                        <div class="modal inmodal fade modal-nota" id="Nota-Entrega-Relacionada-@item.CO_MARCOS_ENTREGA" aria-hidden="true">
+                            <div class="modal-dialog modal-lg" style="max-width:1500px">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                        <h4 class="modal-title">Nota Marco Entrega</h4>
+                                    </div>
+                                    <div class="modal-body">
+
+                                        <div class="card-body">
+                                            <textarea id="nota" maxlength="1000" value="@item.NOTA" class="form-control nota">@item.NOTA</textarea>
+                                            <small>1000 caracteres</small>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button data-dismiss="modal" class="btn btn-info " onclick="salvarForm()">Salvar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-2">
+                            Tipo de Entregas
+                            <select disabled asp-for="@item.MarcosEntrega.CO_TIPO_MARCOS_ENTREGA" class="form-control tipo-entrega">
+                                <option value="">Selecione</option>
+                                @foreach (var tipo in Model.TipoMarcosEntregas.Where(x => x.IS_ATIVO || x.CO_TIPO_MARCOS_ENTREGA == item.MarcosEntrega.CO_TIPO_MARCOS_ENTREGA))
+                                {
+                                    <option value="@tipo.CO_TIPO_MARCOS_ENTREGA">@tipo.NOME</option>
+                                }
+                            </select>
+                            <span asp-validation-for="@item.MarcosEntrega.CO_TIPO_MARCOS_ENTREGA" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-1 pt-4">
+
+                        <a class="text-info open-modal-atividade" onclick="reloadCalendar()" data-toggle="modal" data-target="#Atividades-Entrega-Relacionada-@item.CO_MARCOS_ENTREGA">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                        <a class="text-info open-modal-nota" onclick="mostrarModal(@("'"+"Nota-Entrega-Relacionada-"+ item.CO_MARCOS_ENTREGA+"'"))">
+                            <i class="fa fa-comment-dots"></i>
+                        </a>
+                        <a class="@(firstItem == item ? "btn-remove-item-base" : "btn-remove-item") text-danger" href="javascript:void(0);">
+                            <i class="fa fa-trash"></i>
+                        </a>
+
+
+                    </div>
+
+
+                    <div class="modal inmodal fade modal-atividade" id="Atividades-Entrega-Relacionada-@item.CO_MARCOS_ENTREGA" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" style="max-width:1500px">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                    <h4 class="modal-title">Atividades da Entrega</h4>
+                                </div>
+                                <div class="modal-body">
+
+                                    <div class="card-body">
+                                        @{
+                                            var firstItemAtividade = item.AtividadesEntregas.FirstOrDefault();
+                                        }
+
+                                        @foreach (var atv in item.AtividadesEntregas)
+                                        {
+                                            <div class="row atividade-marcos-entregas-relacionado @(firstItemAtividade == atv ? "base-atividade-marcos-entregas-relacionado" : "")" data-id-marco="@item.CO_MARCOS_ENTREGA">
+                                                <div class="col-11 row">
+                                                    <div class="form-group col-md-2">
+                                                        Descrição
+                                                        <input asp-for="@atv.DESCRICAO" maxlength="1000" value="@atv.DESCRICAO" type="text" class="form-control descricao">
+                                                        <input asp-for="@atv.CO_ATIVIDADES_ENTREGA" value="@atv.CO_ATIVIDADES_ENTREGA" type="hidden" class="codigo">
+                                                    </div>
+
+                                                    <div class="form-group col-md-2">
+                                                        Data de início Prevista
+                                                        <input asp-for="@atv.DT_INICIO_PREVISTO" value="@(atv.DT_INICIO_PREVISTO != null ? atv.DT_INICIO_PREVISTO.ToString().Substring(0,10):"")" type="datetime" class="form-control date-picker date-mask dt-ini-previsto" />
+                                                        @*<span asp-validation-for="@item.DT_PREVISAO" class="text-danger"></span>*@
+                                                    </div>
+                                                    <div class="form-group col-md-2">
+                                                        Data de fim Previsto
+                                                        <input asp-for="@atv.DT_FIM_PREVISTO" value="@(atv.DT_FIM_PREVISTO != null ? atv.DT_FIM_PREVISTO.ToString().Substring(0,10):"")" type="datetime" class="form-control date-picker date-mask dt-fim-previsto" />
+                                                        @*<span asp-validation-for="@item.DT_PREVISAO" class="text-danger"></span>*@
+                                                    </div>
+                                                    <div class="form-group col-md-2">
+                                                        Data de fim Real
+                                                        <input asp-for="@atv.DT_FIM_REAL" value="@(atv.DT_FIM_REAL != null ? atv.DT_FIM_REAL.ToString().Substring(0,10):"")" type="datetime" class="form-control date-picker date-mask dt-fim-real" />
+                                                        @*<span asp-validation-for="@item.DT_PREVISAO" class="text-danger"></span>*@
+                                                    </div>
+
+                                                    <div class="form-group col-md-2">
+                                                        Situação
+                                                        <select asp-for="@atv.STATUS" class="form-control status-atividade">
+                                                            <option value="">Selecione</option>
+                                                            @foreach (var status in Model.StatusAtividadeMarcoEntrega.Where(x => x.IS_ATIVO || x.CO_STATUS_ATIVIDADE_MARCO_ENTREGA == atv.STATUS))
+                                                            {
+                                                                <option value="@status.CO_STATUS_ATIVIDADE_MARCO_ENTREGA">@status.DESCRICAO</option>
+                                                            }
+                                                        </select>
+                                                        <span asp-validation-for="@atv.STATUS" class="text-danger"></span>
+                                                    </div>
+                                                    <div class="form-group col-md-2 ">
+
+
+                                                        Responsável
+                                                        <select asp-for="@atv.MAT_RESPONSAVEL" class="form-control responsavel" asp-items="@ViewBag.Responsavel">
+                                                            <option value="">Selecione</option>
+                                                        </select>
+
+
+                                                        <span asp-validation-for="@atv.MAT_RESPONSAVEL" class="text-danger"></span>
+
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-md-1">
+
+                                                    <a style="text-align:right; margin-top:27px; position:absolute;" class="@(firstItemAtividade == atv ? "btn-remove-item-base" : "btn-remove-item") text-danger" href="javascript:void(0);">
+                                                        <i class="fa fa-trash"></i>
+                                                    </a>
+                                                </div>
+
+                                            </div>
+                                        }
+                                        <button onclick="eventAddNewItemAtividadeMarcoRelacionado(this)" type="button" class="btn btn-success"><i class="fa fa-plus"></i>Atividades Entrega</button>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button data-dismiss="modal" class="btn btn-info " onclick="salvarForm()">Salvar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+            <button onclick="carregaTelaCadastro()" type="button" class="btn btn-success"><i class="fa fa-plus"></i> Entrega</button>
+    </div>
+</div>
+
+
+
+
+
+
+<script>
+
+    var projeto = $("#CO_PROJETO").val();
+
+    function carregaTelaCadastro() {
+
+        $.ajax({
+            url: "/Projetos/marco-relacionado",
+            type: 'POST',
+            data: {projeto:projeto},
+            success: function (obj) {
+                $('#corpo-relaciona-marco').innerHTML = "";
+                $('#corpo-relaciona-marco').html(obj);
+
+                $("#relaciona-marco").modal('show');
+            }
+        });
+    }
+
+    function atualizaTelaCadastro() {
+        var cgcUnd = $("#filtroDropDown_cgcUnd").val();
+        var coProjeto = $("#filtroDropDown_coProjeto").val();
+        $.ajax({
+            url: "/Projetos/marco-relacionado",
+            type: 'POST',
+            data: { projeto: projeto, cgcUnd: cgcUnd, coProjeto: coProjeto },
+            success: function (obj) {
+                $('#corpo-relaciona-marco').innerHTML = "";
+                $('#corpo-relaciona-marco').html(obj);
+
+
+            }
+        });
+    }
+
+
+
+
+
+    function mostrarModal(item) {
+        $("#" + item).modal('show');
+    }
+
+
+    //$(document).on("input", "#nota", function () {
+    //    var limite = 1000;
+    //    var caracteresDigitados = $(this).val().length;
+    //    var caracteresRestantes = limite - caracteresDigitados;
+
+    //    $(".caracteres").text(caracteresRestantes);
+    //});
+    //})
+</script>

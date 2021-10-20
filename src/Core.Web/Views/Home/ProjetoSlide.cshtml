@@ -1,0 +1,531 @@
+﻿@model Core.Business.ViewModels.ProjetoSlideViewModel
+
+@{
+    var first = Model.ListaProjetos.FirstOrDefault();
+
+    bool isAdminstrador = this.CustomAuthorize(new[] { EPerfil.Administrador });
+    IEnumerable<int> idsProjetoUsuarioLogado = ViewBag.ProjetosUsuarioLogado as IEnumerable<int>;
+
+}
+
+<div class="row">
+    <input id="categoria" type="hidden" value="@ViewBag.Categoria" />
+    <form action="/home/ProjetoSlide" id="form-filtro">
+        <div class="col-lg-12 row" style="margin-left:30px; padding-top:10px; ">
+
+            <select asp-for="Categoria" id="drop-categoria" onchange="submitForm()" style="width:250px;  margin-left:10px;" name="Categoria" asp-items="@ViewBag.CategoriaDDL" class="select2-colaborador form-control">
+                <option value="">-Todas Categorias-</option>
+            </select>
+            <select asp-for="Demandante" onchange="submitForm()" style="width:19%" name="Demandante" asp-items="@ViewBag.DemandantesDDL" class="select2-colaborador form-control">
+                <option value="">-Todos Demandantes-</option>
+            </select>
+
+            <select asp-for="Gerente" onchange="submitForm()" style="width:19%; margin-left:10px;" name="Gerente" asp-items="@ViewBag.GerentesDDL" class="select2-colaborador form-control">
+                <option value="">-Todos Gerentes--</option>
+            </select>
+
+            <select asp-for="Tipo" onchange="submitForm()" style="width:19%;  margin-left:10px;" name="Tipo" asp-items="@ViewBag.TipoDDL" class="select2-colaborador form-control">
+                <option value="">-Todos Clientes-</option>
+            </select>
+
+            <select asp-for="Situacao" onchange="submitForm()" style="width:19%;  margin-left:10px;" name="Situacao" asp-items="@ViewBag.SituacaoDDL" class="select2-colaborador form-control">
+                <option value="">-Todas Situações-</option>
+            </select>
+
+        </div>
+    </form>
+    <div class="col-lg-12 ">
+
+
+        <div id="carouselExampleBigIndicators" class="carousel slide" data-ride="carousel" data-interval="10000">
+            <ol class="carousel-indicators">
+                @for (var i = 0; i < Model.ListaProjetos.Count(); i++)
+                {
+
+                    <li data-target="#carouselExampleBigIndicators" data-slide-to="@i" class="@(i == 0 ?"active":"")"></li>
+                }
+
+            </ol>
+            <div id="form-projeto" class="carousel-inner ">
+
+                @foreach (var item in Model.ListaProjetos.OrderBy(x => x.Gerente != null ? x.Gerente.Nome : "zzzzz").ThenBy(x => x.NOME))
+                {
+                    <div class="carousel-item @(item == first ? "active" : "")">
+                        <div class="row " style="margin-left:15px" id="">
+                            <div class="col-lg-12">
+                                <div class="wrapper wrapper-content animated fadeInUp">
+                                    <div class="ibox">
+                                        <div class="ibox-content" style="min-height:645px;">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="m-b-md">
+                                                        @{
+                                                            var action = "";
+                                                            @if (isAdminstrador || idsProjetoUsuarioLogado.Any(x => x == item.CO_PROJETO))
+                                                            { action = "/projetos/editar/" + item.CO_PROJETO; }
+                                                            else
+                                                            {
+                                                                action = "/projetos/detalhes/" + item.CO_PROJETO;
+                                                            }
+                                                        }
+
+                                                        <form action="@action">
+
+
+                                                            <a style="margin-right:5px;  height:25px; font-size:15px" onclick="toggleFullScreen('full')" class="btn btn-white btn-xs float-right fa fa-expand"></a>
+                                                            @if (isAdminstrador || idsProjetoUsuarioLogado.Any(x => x == item.CO_PROJETO))
+                                                            {
+                                                                <button style=" margin-right:5px;  height:25px; font-size:15px" type="submit" class="btn btn-white btn-xs float-right fa fa-edit"></button>
+                                                            }
+                                                            else
+                                                            { <button style=" margin-right:5px;  height:25px; font-size:15px" type="submit" class="btn btn-white btn-xs float-right fa fa-eye"></button>
+                                                            }
+                                                            @if (item.LINK_DOCUMENTACAO != null)
+                                                            {
+
+                                                                <a style="margin-right:5px;" class="btn btn-xs btn-success float-right" href="@item.LINK_DOCUMENTACAO" target="_blank">Documentação</a>
+
+                                                            }
+                                                            else
+                                                            {
+
+                                                                <a style="margin-right:5px;" disabled class="btn btn-xs btn-default float-right" href="">Documentação</a>
+
+                                                            }
+
+                                                            <a style="color:white; margin-right:5px;  height:25px; font-size:15px" onclick="window.print()" class="btn btn-success btn-xs float-right"><i class="fa fa-print float-right"></i></a>
+
+                                                        </form>
+                                                        <h2 style="font-weight:400">@item.NOME @(item.CategoriaProjeto != null ? "(" + item.CategoriaProjeto.DESCRICAO + ")" : "" )</h2>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <dl class="row mb-0">
+                                                        <div class="col-sm-2 text-sm-right"><dt>Gerente:</dt> </div>
+                                                        <div class="col-sm-3 text-sm-left"><dd class="mb-1"><button type="button" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="" data-original-title="@item.MATRICULA_GERENTE"><i class="fa fa-user"></i> @(item.Gerente != null ? item.Gerente.Nome : "")</button> </dd> </div>
+                                                        <div class="col-sm-1text-sm-right"><dt>Demandante:</dt> </div>
+                                                        <div class="col-sm-3 text-sm-left"> <dd class="mb-1"><button type="button" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="" data-original-title="@item.GESTOR_DEMANDANTE"><i class="fa fa-user"></i> @(item.Demandante != null ? item.Demandante.Nome : "")</button></dd></div>
+                                                        <div class="col-sm-1text-sm-right"><dt>Cliente:</dt> </div>
+                                                        <div class="col-sm-2 text-sm-left"> <dd class="mb-1">@item.TipoProjeto.DESCRICAO</dd></div>
+                                                    </dl>
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    <dl class="row mb-0">
+                                                        <div class="col-sm-2 text-sm-right"><dt>Situação:</dt> </div>
+                                                        <div class="col-sm-3 text-sm-left"><dd class="mb-1"><span class="label label-primary">@(item.StatusProjeto != null ? item.StatusProjeto.DESCRICAO : "Não definida")</span> </dd> </div>
+                                                        <div class="col-sm-1text-sm-right"><dt>Data Início:</dt> </div>
+                                                        <div class="col-sm-3 text-sm-left"> <dd class="mb-1">@(item.DT_INICIO != null ? Convert.ToDateTime(item.DT_INICIO).ToString("dd/MM/yyyy") : "")</dd></div>
+                                                        <div class="col-sm-1text-sm-right"><dt>Data Fim:</dt> </div>
+                                                        <div class="col-sm-2 text-sm-left"> <dd class="mb-1">@(item.DT_FIM != null ? Convert.ToDateTime(item.DT_FIM).ToString("dd/MM/yyyy") : "")</dd></div>
+                                                    </dl>
+                                                </div>
+
+
+
+
+                                            </div>
+
+
+                                            <div class="row">
+                                                <div class="col-lg-12">
+
+                                                </div>
+                                            </div>
+                                            <div class="row" style="margin-top:5px;">
+                                                <div class="col-lg-12">
+                                                    <dl class="row mb-0">
+                                                        <div class="col-sm-2 text-sm-right">
+                                                            <dt>Progresso:</dt>
+                                                        </div>
+                                                        <div class="col-sm-10 text-sm-left">
+                                                            <dd>
+                                                                <div class="progress m-b-1">
+                                                                    <div style="width: @(Convert.ToInt16(item.PERCENTUAL))%;" class="progress-bar progress-bar-striped progress-bar-animated"><strong>@item.PERCENTUAL%</strong></div>
+                                                                </div>
+                                                                @*<small>Progresso do projeto</small>*@
+                                                            </dd>
+                                                        </div>
+                                                    </dl>
+                                                </div>
+                                            </div>
+                                            @if (item.PartesInteressadas.Any())
+                                            {
+
+
+                                                <div class="col-lg-12">
+                                                    <dl class="row mb-0">
+                                                        <div class="col-sm-2 text-sm-right">
+                                                            <dt>Partes Interessadas:</dt>
+                                                        </div>
+                                                        <div class="col-sm-10 text-sm-left tooltip-demo">
+                                                            @foreach (var obj in item.PartesInteressadas)
+                                                            {
+                                                                <button type="button" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="" data-original-title="@obj.CGC_UND"><i class="fa fa-user"></i> @(obj.Unidade != null ? obj.Unidade.NO_UNIDADE : "")</button>
+                                                            }
+                                                        </div>
+                                                    </dl>
+                                                </div>
+
+                                            }
+                                            @if (item.EquipeApoio.Any())
+                                            {
+
+
+                                                <div style="margin-top:5px" class="col-lg-12">
+                                                    <dl class="row mb-0">
+                                                        <div class="col-sm-2 text-sm-right">
+                                                            <dt>Participantes:</dt>
+                                                        </div>
+                                                        <div class="col-sm-10 text-sm-left tooltip-demo">
+                                                            @foreach (var obj in item.EquipeApoio)
+                                                            {
+                                                                <button type="button" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" title="" data-original-title="@obj.MATRICULA"><i class="fa fa-user"></i> @(obj.UserApoio != null ? obj.UserApoio.Nome : "")</button>
+                                                            }
+                                                        </div>
+                                                    </dl>
+                                                </div>
+
+                                            }
+                                            <hr />
+                                            <div class="col-lg-12">
+
+
+                                                <h4>Projetos Filhos</h4>
+
+                                                @if (item.ProjetosFilho.Any())
+                                                {
+                                                    <table class="table table-striped">
+                                                        <thead>
+                                                            <tr>
+
+                                                                <th>Nome Projeto</th>
+                                                                <th>Gerente</th>
+
+
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (var obj in item.ProjetosFilho)
+                                                            {
+
+                                                                <tr>
+                                                                    <td>@obj.NOME </td>
+                                                                    <td> @(obj.Gerente != null ? obj.Gerente.Nome : "")</td>
+
+
+                                                                </tr>
+                                                            }
+
+                                                        </tbody>
+                                                    </table>
+                                                }
+                                                else
+                                                {
+                                                    <p>Sem registro de objetivos para este projeto.</p>
+                                                }
+
+
+                                            </div>
+                                            <hr />
+                                            <div class="col-lg-12">
+
+                                                <h4>Resumo do projeto</h4>
+
+                                                <p class="">
+                                                    @item.DESCRICAO
+                                                </p>
+
+
+                                            </div>
+                                            <hr />
+                                            <div class="col-lg-12">
+
+                                                <h4>Objetivos do projeto</h4>
+                                                @if (item.Objetivos.Any())
+                                                {
+                                                    <table class="table table-striped">
+                                                        <thead>
+
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (var obj in item.Objetivos)
+                                                            {
+
+                                                                <tr>
+                                                                    <td>
+                                                                        @obj.DESCRICAO
+                                                                    </td>
+
+
+                                                                </tr>
+                                                            }
+
+                                                        </tbody>
+                                                    </table>
+                                                }
+                                                else
+                                                {
+                                                    <p>Sem registro de objetivos para este projeto.</p>
+                                                }
+
+
+                                            </div>
+
+                                            <div class="row m-t-sm">
+                                                <div class="col-lg-6">
+                                                    <div class="panel blank-panel">
+                                                        <div class="panel-heading">
+                                                            <div class="panel-options">
+                                                                <ul class="nav nav-tabs">
+                                                                    <li><a class="nav-link active" href="#tab-2">Marcos de Entregas em Andamento</a></li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                        <div class="panel-body">
+                                                            <div class="">
+
+                                                                <div class="" id="tab-2">
+                                                                    <table class="table table-striped">
+                                                                        @if (item.MarcosEntregas.Any())
+                                                                        {
+
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th style="width:10%">Situação</th>
+                                                                                    <th style="width:10%">Data de Previsão</th>
+                                                                                    <th style="width:40%">Descrição</th>
+                                                                                    <th style="width:30%">Reponsável</th>
+                                                                                    <th style="width:10%">Tipo de Entrega</th>
+
+
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                @foreach (var obj in item.MarcosEntregas.Where(x => x.STATUS != 4 && x.STATUS != 6).OrderBy(x => x.DT_PREVISAO))
+                                                                                {
+
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <span class="label label-primary">@(obj.SituacaoEntrega != null ? obj.SituacaoEntrega.DESCRICAO : "Não definida") </span>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            @(obj.DT_PREVISAO != null ? Convert.ToDateTime(obj.DT_PREVISAO).ToString("dd/MM/yyyy") : "")
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <p class=""> @obj.DESCRICAO </p>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <p class=""> @(obj.Responsavel != null ? obj.Responsavel.Nome : "") </p>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <p class=""> @(obj.TipoEntrega != null ? obj.TipoEntrega.NOME : "") </p>
+                                                                                        </td>
+
+                                                                                    </tr>
+                                                                                }
+
+                                                                            </tbody>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <p>Sem registro de entregas para este projeto.</p>
+                                                                        }
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-6">
+                                                    <div class="panel blank-panel">
+                                                        <div class="panel-heading">
+                                                            <div class="panel-options">
+                                                                <ul class="nav nav-tabs">
+                                                                    <li><a class="nav-link active" href="#tab-2">Marcos de Entregas Finalizadas</a></li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                        <div class="panel-body">
+                                                            <div class="">
+
+                                                                <div class="" id="tab-2">
+                                                                    <table class="table table-striped">
+                                                                        @if (item.MarcosEntregas.Any())
+                                                                        {
+
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th style="width:10%">Situação</th>
+                                                                                    <th style="width:10%">Data de Previsão</th>
+                                                                                    <th style="width:40%">Descrição</th>
+                                                                                    <th style="width:40%">Reponsável</th>
+                                                                                    <th style="width:10%">Tipo de Entrega</th>
+
+
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                @foreach (var obj in item.MarcosEntregas.Where(x => x.STATUS == 4).OrderByDescending(x => x.DT_PREVISAO))
+                                                                                {
+
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <span class="label label-primary">@(obj.SituacaoEntrega != null ? obj.SituacaoEntrega.DESCRICAO : "Não definida") </span>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            @(obj.DT_PREVISAO != null ? Convert.ToDateTime(obj.DT_PREVISAO).ToString("dd/MM/yyyy") : "")
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <p class=""> @obj.DESCRICAO </p>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <p class=""> @(obj.Responsavel != null ? obj.Responsavel.Nome : "") </p>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <p class=""> @(obj.TipoEntrega != null ? obj.TipoEntrega.NOME : "") </p>
+                                                                                        </td>
+
+                                                                                    </tr>
+                                                                                }
+
+                                                                            </tbody>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <p>Sem registro de entregas para este projeto.</p>
+                                                                        }
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                }
+
+
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleBigIndicators" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleBigIndicators" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+
+    <script>
+
+        function submitForm() {
+            $.blockUI({
+                message: '<div class="fa-3x"><i class="fa fa-spinner fa-spin"></i></div>',
+                css: {
+                    backgroundColor: '#fff',
+                    color: '#222',
+                    opacity: 0.6,
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    zIndex: 99999
+                },
+                overlayCSS: {
+                    backgroundColor: '#000',
+                    opacity: 0.6,
+                    zIndex: 99998
+                }
+            })
+
+            $("#form-filtro").submit();
+        }
+
+
+
+        $(document).ready(function () {
+            $("#drop-categoria").val($("#categoria").val());
+        });
+
+        function isFullScreen() {
+            $('.carousel-indicators').hide();
+        }
+
+        function notFullScreen() {
+            $('.carousel-indicators').show();
+        }
+
+        document.addEventListener("fullscreenchange", function () {
+            if (document.fullscreen) {
+                isFullScreen();
+            } else {
+                notFullScreen();
+            }
+        }, false);
+
+        document.addEventListener("mozfullscreenchange", function () {
+            if (document.mozFullScreen) {
+                isFullScreen();
+            } else {
+                notFullScreen();
+            }
+        }, false);
+
+        document.addEventListener("webkitfullscreenchange", function () {
+            if (document.webkitIsFullScreen) {
+                isFullScreen();
+            } else {
+                notFullScreen();
+            }
+        }, false);
+
+
+
+
+
+
+
+        function toggleFullScreen(id) {
+
+            var div = document.getElementById(id);
+
+            if ((document.fullScreenElement && document.fullScreenElement !== null) ||
+                (!document.mozFullScreen && !document.webkitIsFullScreen)) {
+                if (div.requestFullScreen) {
+                    div.requestFullScreen();
+                } else if (div.mozRequestFullScreen) {
+                    div.mozRequestFullScreen();
+                } else if (div.webkitRequestFullScreen) {
+                    div.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+
+                }
+            } else {
+
+                if (document.cancelFullScreen) {
+
+                    document.cancelFullScreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.webkitCancelFullScreen) {
+                    document.webkitCancelFullScreen();
+                }
+            }
+        }
+
+
+
+    </script>
+}

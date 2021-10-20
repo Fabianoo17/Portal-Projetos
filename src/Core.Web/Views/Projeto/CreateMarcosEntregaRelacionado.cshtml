@@ -1,0 +1,76 @@
+﻿@model Core.Web.Models.CreateMarcosEntregaRelacionadoViewModel
+@{
+    ViewData["Title"] = "CreateMarcosEntregaRalcionado";
+    Layout = null;
+}
+
+<div class="col-lg-12">
+    <div class="ibox ">
+        <div class="ibox-title">
+            <h5>Filtro Marcos </h5>
+            <form id="form-filtro">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <select onchange="atualizaTelaCadastro()" class="form-control" asp-for="filtroDropDown.cgcUnd" asp-items="@ViewBag.DropDownUnidades">
+                            <option value="">Todas Unidades</option>
+                        </select>
+
+                    </div>
+                    <div class="col-lg-6">
+                        <select onchange="atualizaTelaCadastro()" class="form-control" asp-for="filtroDropDown.coProjeto" asp-items="@ViewBag.DropDownProjetos">
+                            <option value="">Todas Projetos</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-12">
+    <div class="ibox ">
+        <div class="ibox-title">
+            <h5>Relacionar Marcos Entrega </h5>
+
+        </div>
+        <div class="ibox-content">
+
+            <form id="form-relaciona-marco">
+                <div class="row">
+
+                    <div class="col-lg-6">
+                        <input type="hidden" asp-for="marcosEntregaRelacionadoViewModel.CO_PROJETO" value="@ViewBag.coProjeto" />
+                        <select asp-for="marcosEntregaRelacionadoViewModel.CO_MARCOS_ENTREGA" class="form-control" asp-items="@ViewBag.DropDownMarcos">
+                            <option value="">Selecione o Marco</option>
+                        </select>
+                        <span asp-validation-for="marcosEntregaRelacionadoViewModel.CO_MARCOS_ENTREGA" class="text-danger"></span>
+                    </div>
+                    <div class="col-lg-6">
+                        <select asp-for="marcosEntregaRelacionadoViewModel.MAT_RESPONSAVEL" class="form-control" asp-items="@ViewBag.DropDownResponsaveis">
+                            <option value="">Selecione o Responsável</option>
+                        </select>
+                        <span asp-validation-for="marcosEntregaRelacionadoViewModel.MAT_RESPONSAVEL" class="text-danger"></span>
+                    </div>
+
+                    <div style="margin-top:10px;" class="col-lg-12">
+                        Nota
+                        <textarea asp-for="marcosEntregaRelacionadoViewModel.NOTA" maxlength="1000" id="nota" class="form-control" cols="6"></textarea>
+                        <span asp-validation-for="marcosEntregaRelacionadoViewModel.NOTA" class="text-danger"></span>
+                    </div>
+                    <div style="margin-top:10px" class="col-lg-12">
+                        <a onclick="salvarMarcoRelacionado()" class="btn btn-success float-right">Salvar</a>
+                    </div>
+                </div>
+
+            </form>
+
+
+
+            @*<div class="table-responsive">
+
+                </div>*@
+
+        </div>
+    </div>
+</div>
+

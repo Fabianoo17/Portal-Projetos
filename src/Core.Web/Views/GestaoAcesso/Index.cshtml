@@ -1,0 +1,85 @@
+﻿@model IEnumerable<Core.Business.ViewModels.Identity.UsuarioAcessoViewModel>
+@{
+    ViewData["Module"] = "Gestão de Acesso";
+    ViewData["Title"] = "Usuários";
+}
+
+<div class="card">
+    <div class="card-header">@ViewData["Title"]</div>
+    <div class="card-body">
+        <p><a asp-action="Create" class="btn btn-primary"><i class="fa fa-plus"></i></a></p>
+
+        <table class="table datatable table-hover">
+            <thead>
+                <tr class="thead-light">
+                    <th>Matrícula</th>
+                    <th>Nome</th>
+                    <th>Perfis</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="">
+
+                        <td><a asp-action="Edit" asp-route-matricula="@item.Matricula">@item.Matricula</a></td>
+                        <td><a asp-action="Edit" asp-route-matricula="@item.Matricula">@item.Usuario?.Nome </a></td>
+                        <td>
+                            <a asp-action="Edit" asp-route-matricula="@item.Matricula">
+                                @{ string[] perfis = item.UsuariosPerfis.Select(x => x.Perfil?.NOME).ToArray(); }
+                                @string.Join(", ", perfis)
+                            </a>
+                        </td>
+
+                        <td style="text-align:right;">
+                            <a class="btn btn-warning" data-toggle="tooltip" title="Editar" asp-action="Edit" asp-route-matricula="@item.Matricula"><i class="fa fa-edit"></i></a>
+                            <a class="btn btn-danger" data-toggle="tooltip" title="Excluir" asp-action="Delete" asp-route-matricula="@item.Matricula"><i class="fa fa-trash"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+@section styles{
+    <link href="~/vendor/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" asp-append-version="true" />
+}
+
+@section scripts{
+    <script src="~/vendor/datatables.net/js/jquery.dataTables.min.js" asp-append-version="true"></script>
+    <script src="~/vendor/datatables.net-bs4/js/dataTables.bootstrap4.js" asp-append-version="true"></script>
+    <script>
+        $(function () {
+            $('.datatable').DataTable({
+                ordering: false,
+                lengthChange: false,
+                language: {
+                    "sEmptyTable": "Nenhum registro encontrado",
+                    "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+                    "sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
+                    "sInfoFiltered": "(Filtrados de _MAX_ registros)",
+                    "sInfoPostFix": "",
+                    "sInfoThousands": ".",
+                    "sLengthMenu": "_MENU_ resultados por página",
+                    "sLoadingRecords": "Carregando...",
+                    "sProcessing": "Processando...",
+                    "sZeroRecords": "Nenhum registro encontrado",
+                    "sSearch": "Pesquisar",
+                    "oPaginate": {
+                        "sNext": "Próximo",
+                        "sPrevious": "Anterior",
+                        "sFirst": "Primeiro",
+                        "sLast": "Último"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": Ordenar colunas de forma ascendente",
+                        "sSortDescending": ": Ordenar colunas de forma descendente"
+                    }
+                }
+            });
+        });
+    </script>
+}

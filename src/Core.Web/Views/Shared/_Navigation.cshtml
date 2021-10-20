@@ -1,0 +1,52 @@
+﻿<nav class="navbar-default navbar-static-side" role="navigation">
+    <div class="sidebar-collapse">
+        <ul class="nav metismenu" id="side-menu">
+            <li class="nav-header" style="height:60px; padding:10px 25px; background-color:#005ca9">
+                <div class="dropdown profile-element">
+                    <img src="~/themes/default/img/logo-caixa.png" />
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        <span class=" block">GERTI - CETEC</span>
+                    </a>
+                </div>
+                <div class="logo-element" style="height:50px; padding:2px 0px; background-color:#005ca9">
+                    <img src="~/themes/default/img/logo-caixa-x.png" />
+
+                </div>
+            </li>
+            <li class="@Html.IsSelected(controller: "Home",action:"Index")">
+                <a href="@Url.Action("Index", "Home")"><i class="fas fa-chart-pie"></i> <span class="nav-label" data-i18n="nav.metrics">Principal</span> </a>
+            </li>
+
+
+            <li class="@Html.IsSelected(controller: "Projeto")">
+                <a asp-action="Index" asp-controller="Projeto"><i class="fa fa-tasks"></i> <span class="nav-label" data-i18n="nav.widgets">Projetos</span> </a>
+            </li>
+            @if (this.CustomAuthorize(new[] { EPerfil.Administrador }))
+            {
+                <li class="@Html.GetActiveRoute("Index", "Parametros", false) @Html.IsSelected(controller: "Parametros",action: "Index")">
+                    <a asp-action="Index" asp-controller="Parametros"><i class="fas fa-table"></i> <span class="nav-label" data-i18n="nav.widgets">Tabelas</span> </a>
+                </li>
+            }
+            @if (this.CustomAuthorize(new[] { EPerfil.Administrador }))
+            {
+                <li class="@Html.IsSelected(controller: "GestaoAcesso", action:"Index")">
+                    <a href="@Url.Action("Index", "GestaoAcesso")"><i class="fa fa-user"></i> <span class="nav-label" data-i18n="nav.widgets">Usuários</span> </a>
+                </li>
+            }
+            @if (this.CustomAuthorize(new[] { EPerfil.Gerente }))
+            {
+                <li class="@Html.GetActiveRoute("Vinculacao", "GestaoAcesso", false)">
+                    <a asp-action="Vinculacao" asp-controller="GestaoAcesso"><i class="fa fa-link"></i> <span class="nav-label" data-i18n="nav.widgets">Vinculação</span></a>
+                </li>
+            }
+
+            <li class="@Html.IsSelected(controller: "Home",action:"RelatorioProjetos")">
+                <a href="@Url.Action("RelatorioProjetos", "Home")"><i class="fas fa-history"></i> <span class="nav-label" data-i18n="nav.metrics">Relatorio</span> </a>
+            </li>
+            <li class="@Html.IsSelected(controller: "Home",action:"ProjetoSlide")">
+                <a href="@Url.Action("ProjetoSlide", "Home")"><i class="fas fa-images"></i> <span class="nav-label" data-i18n="nav.metrics">Visão Slide</span> </a>
+            </li>
+
+        </ul>
+    </div>
+</nav>

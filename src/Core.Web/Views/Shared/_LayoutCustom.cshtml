@@ -1,0 +1,127 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Painel Projetos</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    @if (IsSectionDefined("Styles"))
+    {@RenderSection("Styles", required: false)}
+
+
+    <link href="~/libs/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+
+
+    <link href="~/vendor/@@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/libs/steps/css/animate.css" rel="stylesheet" />
+    <link href="~/libs/site.css" rel="stylesheet" />
+    <link href="~/libs/steps/css/style.css" rel="stylesheet" />
+    <link href="~/libs/steps/css/jquery.steps.css" rel="stylesheet" />
+    <link href="~/vendor/toastr/toastr.css" rel="stylesheet" />
+    <link href="~/libs/switchery/switchery.css" rel="stylesheet" />
+    <link href="~/vendor/select2/css/select2.min.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/vendor/select2-bootstrap-theme/select2-bootstrap.min.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/vendor/pc-bootstrap4-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/libs/dataTables/datatables.css" rel="stylesheet" />
+    <link href="~/libs/printPDF/print.min.css" rel="stylesheet" />
+    <link href="~/vendor/sweetalert2/sweetalert2.min.css" rel="stylesheet" asp-append-version="true" />
+</head>
+
+<body id="">
+
+    <div id="wrapper" class="@Html.PageClass()">
+        <partial name="_Navigation" />
+        <div id="page-wrapper" class="gray-bg @ViewBag.SpecialClass">
+
+            <partial name="_TopNavbar" />
+            <div onfullscreenchange="teste()" id="full" style="background-color:#f3f3f4">
+                @RenderBody()
+            </div>
+
+            <partial name="_Footer" />
+            <span id="url-pesquisar-usuarios" style="display: none;" data-url="@Url.Action("PesquisarUsuarios", "GestaoAcesso", new { Area = "" })"></span>
+            <span id="message-success" style="display: none;" data-message="@TempData["Success"]"></span>
+            <span id="message-error" style="display: none;" data-message="@TempData["Error"]"></span>
+        </div>
+
+        <partial name="_RightSidebar" />
+    </div>
+
+
+    <script src="~/vendor/jquery/jquery.min.js" asp-append-version="true"></script>
+    <script src="~/vendor/jquery.easing/jquery.easing.min.js" asp-append-version="true"></script>
+    <script src="~/vendor/popper.js/umd/popper.min.js" asp-append-version="true"></script>
+    <script src="~/vendor/bootstrap/js/bootstrap.min.js" asp-append-version="true"></script>
+    <script src="~/vendor/moment/moment-with-locales.min.js" asp-append-version="true"></script>
+    <script src="~/libs/steps/js/jquery.steps.min.js"></script>
+    <script src="~/vendor/metismenu/metisMenu.min.js" asp-append-version="true"></script>
+    <script src="~/libs/pace/pace.js" asp-append-version="true"></script>
+    <script src="~/themes/default/js/scripts.js" asp-append-version="true"></script>
+    <script src="~/vendor/jquery-blockui/jquery.blockUI.js" asp-append-version="true"></script>
+    <script src="~/js/script.js" asp-append-version="true"></script>
+    <script src="~/libs/slimScroll/jquery.slimscroll.js" asp-append-version="true"></script>
+    <script src="~/vendor/toastr/toastr.min.js" asp-append-version="true"></script>
+    <script src="~/vendor/select2/js/select2.full.min.js" asp-append-version="true"></script>
+    <script src="~/vendor/select2/js/i18n/pt-BR.js" asp-append-version="true"></script>
+    <script src="~/vendor/pc-bootstrap4-datetimepicker/js/bootstrap-datetimepicker.min.js" asp-append-version="true"></script>
+    <script src="~/vendor/jquery-mask-plugin/jquery.mask.min.js" asp-append-version="true"></script>
+    <script src="~/vendor/jquery.easing/jquery.easing.min.js" asp-append-version="true"></script>
+    <script src="~/libs/switchery/switchery.js" asp-append-version="true"></script>
+    <script src="~/libs/printPDF/print.min.js" asp-append-version="true"></script>
+    <script src="~/libs/chartJs/Chart.min.js" asp-append-version="true"></script>
+    <script src="~/libs/chartJs/Chart-plugin-labels.js" asp-append-version="true"></script>
+    <script src="~/libs/highcharts/highcharts.js" asp-append-version="true"></script>
+    <script src="~/libs/dataTables/datatables.js" asp-append-version="true"></script>
+    <script src="~/vendor/sweetalert2/sweetalert2.all.min.js" asp-append-version="true"></script>
+
+    @RenderSection("Scripts", required: false)
+
+    @section scripts{
+        <script>
+
+            $(function () {
+
+                var messageSuccess = $('#message-success').data('message');
+                if (messageSuccess != '') {
+                    toastr.options = {
+                        "closeButton": true,
+                        "progressBar": true,
+                        "positionClass": "toast-bottom-right"
+                    }
+                    toastr["success"](messageSuccess);
+                }
+
+                var messageError = $('#message-error').data('message');
+                if (messageError != '') {
+                    toastr.options = {
+                        "closeButton": true,
+                        "progressBar": true,
+                        "timeOut": "10000",
+                        "positionClass": "toast-bottom-right"
+                    }
+                    toastr["error"](messageError);
+                }
+
+                document.getElementById('full').addEventListener('fullscreenchange', (event) => {
+                    if (document.fullscreenElement) {
+                        console.log(`Element: ${document.fullscreenElement.id} entered fullscreen mode`);
+                    } else {
+                        console.log('Leaving full-screen mode.');
+                    }
+                })
+
+
+            });
+
+
+
+        </script>
+    }
+
+
+
+
+</body>
+</html>

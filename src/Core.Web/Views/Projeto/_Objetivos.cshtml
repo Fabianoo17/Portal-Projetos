@@ -1,0 +1,42 @@
+﻿@model IEnumerable<Core.Business.ViewModels.Projetos.ObjetivoViewModel>
+@{
+    Layout = null;
+}
+
+<div class="card mt-4">
+    <div class="card-header">Objetivos</div>
+    <div class="card-body" id="card-body-objetivos">
+
+        @if (Model.Any())
+        {
+            var firstItem = Model.FirstOrDefault();
+            foreach (var item in Model)
+            {
+                <form data-form-itens="@item.CO_OBJETIVO">
+                    <div class="row item">
+                        <div class="col-11">
+                            <div class="form-group">
+                                Descrição
+                                <input maxlength="1000" value="@item.DESCRICAO" type="text" class="form-control">
+                                <input value="@item.CO_OBJETIVO" type="hidden">
+                                <input value="@item.CO_PROJETO" type="hidden">
+                            </div>
+                        </div>
+                        <div class="col-1 pt-4">
+                            <a class="text-danger" href="javascript:void(0);" onclick="removerItem(@item.CO_OBJETIVO);">
+                                <i class="fa fa-trash"></i>
+                            </a>
+                            <a class="text-danger" href="javascript:void(0);" onclick="editarItem(@item.CO_OBJETIVO);">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            }
+            <button type="button" class="btn btn-success" onclick="carregarFormModal('@TipoItemProjeto.Objetivo.ToString()');">
+                <i class="fa fa-plus"></i> Objetivo
+            </button>
+        }
+
+    </div>
+</div>

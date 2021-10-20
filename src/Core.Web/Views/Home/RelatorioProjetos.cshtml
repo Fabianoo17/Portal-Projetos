@@ -1,0 +1,102 @@
+﻿@model IEnumerable<Core.Business.Entities.Projetos.Dashboard>
+@{
+    ViewData["Title"] = "Relatório Projetos";
+}
+
+<div style="margin-top:15px;" class="row wrapper border-bottom white-bg ">
+    <form action="/home/listarrelatorioprojetos" id="form-filtro">
+        <div class="col-lg-12 row" style="float:left; padding-top:10px; padding-bottom:10px;">
+
+            <select onchange="carregaRelatorio()" style="width:19%" name="Demandante" asp-items="@ViewBag.DemandantesDDL" class="select2-colaborador form-control">
+                <option value="">-Todos Demandantes-</option>
+            </select>
+
+            <select onchange="carregaRelatorio()" style="width:19%; margin-left:10px;" name="Gerente" asp-items="@ViewBag.GerentesDDL" class="select2-colaborador form-control">
+                <option value="">-Todos Gerentes--</option>
+            </select>
+
+            <select onchange="carregaRelatorio()" style="width:19%;  margin-left:10px;" name="Tipo" asp-items="@ViewBag.TipoDDL" class="select2-colaborador form-control">
+                <option value="">-Todos Clientes-</option>
+            </select>
+
+            <select onchange="carregaRelatorio()" style="width:19%;  margin-left:10px;" name="Situacao" asp-items="@ViewBag.SituacaoDDL" class="select2-colaborador form-control">
+                <option value="">-Todas Situações-</option>
+            </select>
+            <select onchange="carregaRelatorio()" style="width:19%;  margin-left:10px;" name="Categoria" asp-items="@ViewBag.CategoriaDDL" class="select2-colaborador form-control">
+                <option value="">-Todas Categorias-</option>
+            </select>
+
+        </div>
+    </form>
+</div>
+
+<div class="card" style="margin-top:10px;">
+    <div class="card-header">@ViewData["Title"]</div>
+    <div id="corpo-relatorio" class="card-body">
+         @{  
+            await Html.RenderPartialAsync("_ListarRelatorioProjetos", Model); 
+          }
+    </div>
+</div>
+
+@section scripts{
+
+    <script>
+        $(document).ready(function () {
+            $('.dataTables-example').DataTable({
+                pageLength: 100,
+                responsive: true,
+                ordering: true,
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [
+
+                    { extend: 'excel', title: 'Relatorio Projetos ' },
+
+
+
+                ],
+                language: {
+                    "sEmptyTable": "Nenhum registro encontrado",
+                    "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+                    "sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
+                    "sInfoFiltered": "(Filtrados de _MAX_ registros)",
+                    "sInfoPostFix": "",
+                    "sInfoThousands": ".",
+                    "sLengthMenu": "_MENU_ resultados por página",
+                    "sLoadingRecords": "Carregando...",
+                    "sProcessing": "Processando...",
+                    "sZeroRecords": "Nenhum registro encontrado",
+                    "sSearch": "Pesquisar",
+                    "oPaginate": {
+                        "sNext": "Próximo",
+                        "sPrevious": "Anterior",
+                        "sFirst": "Primeiro",
+                        "sLast": "Último"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": Ordenar colunas de forma ascendente",
+                        "sSortDescending": ": Ordenar colunas de forma descendente"
+                    }
+                }
+
+            });
+
+        });
+
+
+        function carregaRelatorio() {
+
+            $.ajax({
+                url: "/Home/ListarRelatorioProjetos",
+                type: 'POST',
+                data: $("#form-filtro").serialize(),
+                success: function (obj) {
+                    $('#corpo-relatorio').innerHTML = "";
+                    $('#corpo-relatorio').html(obj); 
+                }
+            });
+        }
+
+
+    </script>
+}

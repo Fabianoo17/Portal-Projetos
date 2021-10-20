@@ -1,0 +1,61 @@
+﻿{
+  "bootstrap": {
+    "dist/**/*.js": "",
+    "dist/**/*.css": ""
+  },
+  "jquery": {
+    "dist/*.js": ""
+  },
+  "popper.js": {
+    "dist/*": "",
+    "dist/**/*": ""
+  },
+  "jquery-validation": {
+    "dist/**/*.js": ""
+  },
+  "jquery-validation-unobtrusive": {
+    "dist/**/*.js": ""
+  },
+  "jquery.autocomplete": {
+    "*.js": ""
+  },
+  "jquery-mask-plugin": {
+    "dist/*.js": ""
+  },
+  "moment": {
+    "min/*": ""
+  },
+  "select2": {
+    "dist/**/*": "",
+    "dist/*": ""
+  },
+  "select2-bootstrap-theme": {
+    "dist/**/*.css": ""
+  },
+  "sweetalert2": {
+    "dist/*": ""
+  },
+  "toastr": {
+    "build/*": ""
+  },
+  "jquery-ajax-unobtrusive": {
+    "dist/*": ""
+  },
+  "bootbox": {
+    "dist/*": ""
+  },
+  "pc-bootstrap4-datetimepicker": {
+    "build/**/*.js": "",
+    "build/**/*.css": ""
+  },
+  "jquery.easing": {
+    "*.js": ""
+  },
+  "jquery-blockui": {
+    "*.js": ""
+  },
+  "metismenu": {
+    "dist/*.css": "",
+    "dist/*.js": ""
+  }
+}

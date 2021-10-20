@@ -1,0 +1,151 @@
+﻿@model IEnumerable<Core.Business.ViewModels.Projetos.ProjetoViewModel>
+@{
+    ViewData["Module"] = "Projetos";
+    ViewData["Title"] = "Projetos";
+
+    bool isAdminstrador = this.CustomAuthorize(new[] { EPerfil.Administrador });
+    IEnumerable<int> idsProjetoUsuarioLogado = ViewBag.ProjetosUsuarioLogado as IEnumerable<int>;
+}
+
+<div class="card" style="margin-top:10px;">
+    <div class="card-header">@ViewData["Title"]</div>
+    <div class="card-body">
+
+        @if (isAdminstrador)
+        {
+            <p><a asp-action="Create" class="btn btn-success"><i class="fa fa-plus"></i></a></p>
+        }
+
+        <table class="table datatable table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th>@Html.DisplayNameFor(x => x.NOME)</th>
+                    <th>@Html.DisplayNameFor(x => x.TipoProjeto.DESCRICAO)</th>
+                    <th>@Html.DisplayNameFor(x => x.Gerente.Nome)</th>
+
+                    <th>@Html.DisplayNameFor(x => x.DT_INICIO)</th>
+                    <th>@Html.DisplayNameFor(x => x.DT_FIM)</th>
+                    <th>@Html.DisplayNameFor(x => x.CO_STATUS)</th>
+                    <th>% de Desempenho</th>
+                    <th style="text-align:right; width:190px;"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="">
+                        <td>@Html.DisplayFor(x => item.NOME)</td>
+                        <td>@Html.DisplayFor(x => item.TipoProjeto.DESCRICAO)</td>
+                        <td>@Html.DisplayFor(x => item.Gerente.Nome)</td>
+                        <td>@Html.DisplayFor(x => item.DT_INICIO)</td>
+                        <td>@Html.DisplayFor(x => item.DT_FIM)</td>
+
+                        <td>@Html.DisplayFor(x => item.StatusProjeto.DESCRICAO)</td>
+                        <td>@Html.DisplayFor(x => item.PERCENTUAL)@(item.PERCENTUAL != null ? "%" : "" )</td>
+                        <td style="text-align:right">
+                            <a class="btn btn-success" data-toggle="tooltip" title="Detalhes" asp-action="Details" asp-route-CO_PROJETO="@item.CO_PROJETO"><i class="fa fa-eye"></i></a>
+                            <a class="btn btn-success" onclick="carregarModal(@item.CO_PROJETO)"  title="Detalhes" ><i style="color:white" class="fa fa-project-diagram"></i></a>
+                            @*<a class="btn btn-success" data-toggle="tooltip" title="Detalhes" asp-action="Details" asp-route-CO_PROJETO="@item.CO_PROJETO"><i class="fa fa-book-open"></i></a>*@
+                            @if (isAdminstrador || idsProjetoUsuarioLogado.Any(x => x == item.CO_PROJETO))
+                            {
+                                <a class="btn btn-warning" data-toggle="tooltip" title="Editar" asp-action="Edit" asp-route-CO_PROJETO="@item.CO_PROJETO"><i class="fa fa-edit"></i></a>
+                            }
+                            @if (isAdminstrador)
+                            {
+                                <a class="btn btn-danger" data-toggle="tooltip" title="Excluir" asp-action="Delete" asp-route-CO_PROJETO="@item.CO_PROJETO"><i class="fa fa-trash"></i></a>
+                            }
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <p>Teste teste</p>
+            <div id="modal-conteudo">
+                teste
+            </div>
+            @*<div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>*@
+        </div>
+    </div>
+</div>
+
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/sankey.js"></script>
+<script src="https://code.highcharts.com/modules/organization.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+@section scripts{
+
+    <script>
+        $(function () {
+            $('.datatable').DataTable({
+                ordering: false,
+                lengthChange: false,
+                language: {
+                    "sEmptyTable": "Nenhum registro encontrado",
+                    "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+                    "sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
+                    "sInfoFiltered": "(Filtrados de _MAX_ registros)",
+                    "sInfoPostFix": "",
+                    "sInfoThousands": ".",
+                    "sLengthMenu": "_MENU_ resultados por página",
+                    "sLoadingRecords": "Carregando...",
+                    "sProcessing": "Processando...",
+                    "sZeroRecords": "Nenhum registro encontrado",
+                    "sSearch": "Pesquisar",
+                    "oPaginate": {
+                        "sNext": "Próximo",
+                        "sPrevious": "Anterior",
+                        "sFirst": "Primeiro",
+                        "sLast": "Último"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": Ordenar colunas de forma ascendente",
+                        "sSortDescending": ": Ordenar colunas de forma descendente"
+                    }
+                }
+            });
+        });
+
+        function carregarModal(coProjeto) {
+
+            window.location.href = "/Projetos/eap/" + coProjeto;
+            //$('#modal-conteudo').innerHTML = "";
+            //$.ajax({
+            //    url: "/Projetos/eap",
+            //    type: 'POST',
+            //    data: { id: coProjeto },
+            //    success: function (obj) {
+
+            //        $('#modal-conteudo').html(obj);
+            //    }
+            //});
+        }
+
+
+    </script>
+}

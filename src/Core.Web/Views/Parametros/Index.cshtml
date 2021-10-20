@@ -1,0 +1,1048 @@
+﻿@model Core.Business.ViewModels.Projetos.ParametrosViewModel
+@{
+    ViewData["Title"] = "Tabelas";
+}
+
+<input id="msg-sucess" type="hidden" value="@TempData["MSG_SUCESS"]"/>
+<input id="msg-error" type="hidden" value="@TempData["MSG_ERROR"]" />
+
+
+
+
+<div class="card" style="margin-top:10px;">
+    <div class="card-header">@ViewData["Title"]</div>
+    <div id="select-tabelas" class="card-body select-tabela" style="height:60px; padding:10px;">
+
+
+        <input id="optionSelected" type="hidden" value="@TempData["DDL_SELECT"]" />
+        @*<label class="">Tabelas</label>*@
+        <select id="ddlTabelas" onchange="mostrarDiv()" class="form-control m-b" style="width:300px; margin-left:10px; ">
+            <option value="">--Selecione a Tabela--</option>
+            <option id="option-complexidade" value="divComplexidade">Complexidades</option>
+            <option id="option-prioridade" value="divPrioridade">Prioridades</option>
+            <option id="option-status-projeto" value="divStatusProjeto">Situações do Projeto</option>
+            <option id="option-tipo-projeto" value="divTipoProjeto">Clientes</option>
+            <option id="option-categoria-projeto" value="divCategoriaProjeto">Categorias do Projeto</option>
+            <option id="option-tipos-marcos-entregas" value="divTipoMarcosEntregas">Tipos de Marcos Entregas</option>
+            <option id="option-status-atividade-marcos-entrega" value="divStatusAtividadeMarcosEntrega">Situação das Atividades da Entrega</option>
+
+        </select>
+
+    </div>
+</div>
+<div class="row " style="padding: 20px 0px 0px 20px;  ">
+    <div id="divComplexidade" class="ibox col-md-2 is-display">
+
+        <div class="ibox-title" style="text-align:left">
+            <h5 class="pull-left">Complexidade</h5>
+            <button data-toggle="modal" data-target="#Complexidade" class=" btn btn-success btn-circle pull-right" style="top:8px; right:5px;">
+                <i class="fa fa-plus"></i>
+            </button>
+        </div>
+        <div class="ibox-content">
+
+            <table class="table">
+                <thead>
+                    <tr class="thead-light">
+                        <th>
+                            Complexidade
+                        </th>
+                        <th>
+                            Ativo?
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Complexidades)
+                    {
+                        <tr>
+                            <td>
+                                <input class="coComplexidade" type="hidden" value="@item.CO_COMPLEXIDADE" id="CO_COMPLEXIDADE" name="CO_COMPLEXIDADE" />
+                                <input class="complexidade " type="hidden" value="@item.COMPLEXIDADE" id="COMPLEXIDADE" name="COMPLEXIDADE" />
+                                @item.COMPLEXIDADE
+
+                            </td>
+                            <td>
+                                <div class="switch">
+
+                                    <div class="onoffswitch">
+
+                                        <input id="Complexidade_@item.CO_COMPLEXIDADE" class="is-ativo-complexidade onoffswitch-checkbox" onchange="AtualizarComplexidade(this)" type="checkbox" value="@item.IS_ATIVO" @(item.IS_ATIVO ? "checked" : "") />
+                                        <label class="onoffswitch-label" for="Complexidade_@item.CO_COMPLEXIDADE">
+                                            <span class="onoffswitch-inner"></span>
+                                            <span class="onoffswitch-switch"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="divPrioridade" class="ibox col-md-2 is-display">
+
+        <div class="ibox-title" style="text-align:left">
+            <h5>Prioridade</h5>
+            <button data-toggle="modal" data-target="#Prioridade" class="btn btn-success btn-circle pull-right" data-toggle="modal" style="top:8px; right:5px;">
+                <i class="fa fa-plus"></i>
+            </button>
+        </div>
+        <div class="ibox-content">
+
+            <table class="table">
+                <thead>
+                    <tr class="thead-light">
+                        <th>
+                            Prioridade
+                        </th>
+                        <th>
+                            Ativo?
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Prioridades)
+                    {
+                        <tr>
+                            <td>
+                                <input class="coPrioridade" type="hidden" value="@item.PRIORIDADE" id="PRIORIDADE" name="PRIORIDADE" />
+                                <input class="prioridade" type="hidden" value="@item.CO_PRIORIDADE" id="CO_PRIORIDADE" name="CO_PRIORIDADE" />
+                                @item.PRIORIDADE
+                            </td>
+                            <td>
+                                <div class="switch">
+
+                                    <div class="onoffswitch">
+
+                                        <input id="Prioridade_@item.CO_PRIORIDADE" class="is-ativo-prioridade onoffswitch-checkbox" onchange="AtualizarPrioridade(this)" type="checkbox" value="@item.IS_ATIVO" @(item.IS_ATIVO ? "checked" : "") />
+                                        <label class="onoffswitch-label" for="Prioridade_@item.CO_PRIORIDADE">
+                                            <span class="onoffswitch-inner"></span>
+                                            <span class="onoffswitch-switch"></span>
+                                        </label>
+                                    </div>
+                                </div>
+
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div id="divTipoProjeto" class="ibox col-md-3 is-display">
+
+        <div class="ibox-title" style="text-align:left">
+            <h5>Cliente do Projeto</h5>
+            <button data-toggle="modal" data-target="#TipoProjeto" class="btn btn-success btn-circle pull-right" style="top:8px; right:5px;">
+                <i class="fa fa-plus"></i>
+            </button>
+        </div>
+        <div class="ibox-content">
+
+            <table class="table">
+                <thead>
+                    <tr class="thead-light">
+
+                        <th>
+                            Cliente
+                        </th>
+                        <th>
+                            Ativo?
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.TiposProjeto.OrderBy(x => x.DESCRICAO))
+                    {
+                        <tr>
+                            <td>
+                                <input onchange="AtualizarTipoProjeto(1,this)" class="tipo-descricao" type="text" value="@item.DESCRICAO" id="DESCRICAO" name="DESCRICAO" />
+                                <input class="co-tipo" type="hidden" value="@item.CO_TIPO" id="CO_TIPO" name="CO_TIPO" />
+                                @* @item.DESCRICAO*@
+                            </td>
+                            <td class="">
+                                <div class="switch">
+
+                                    <div class="onoffswitch">
+
+                                        <input id="Tipos_@item.CO_TIPO" class="is-ativo-tipo onoffswitch-checkbox" onchange="AtualizarTipoProjeto(2,this)" type="checkbox" value="@item.IS_ATIVO" @(item.IS_ATIVO ? "checked" : "") />
+                                        <label class="onoffswitch-label" for="Tipos_@item.CO_TIPO">
+                                            <span class="onoffswitch-inner"></span>
+                                            <span class="onoffswitch-switch"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="divStatusProjeto" class="ibox col-md-3 is-display">
+
+        <div class="ibox-title" style="text-align:left">
+            <h5 class="pull-left">Situação do Projeto</h5>
+            <button data-toggle="modal" data-target="#StatusProjeto" class="btn btn-success btn-circle pull-right" style="top:8px; right:5px;">
+                <i class="fa fa-plus"></i>
+            </button>
+        </div>
+        <div class="ibox-content">
+
+            <table class="table">
+                <thead>
+                    <tr class="thead-light">
+
+                        <th>
+                            Situação
+                        </th>
+                        <th>
+                            Ativo?
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Status.OrderBy(x => x.DESCRICAO))
+                    {
+                        <tr>
+
+                            <td>
+                                <input class="co-status" id="CO_STATUS" type="hidden" value="@item.CO_STATUS" />
+                                <input onchange="AtualizarStatusProjeto(1,this)" class="status-descricao" type="text" value="@item.DESCRICAO" />
+
+                            </td>
+                            <td>
+                                <div class="switch">
+
+                                    <div class="onoffswitch">
+
+                                        <input class="is-ativo-status onoffswitch-checkbox" type="checkbox" onchange="AtualizarStatusProjeto(2,this)" id="STATUS_@item.CO_STATUS" value="@item.IS_ATIVO" @(item.IS_ATIVO ? "checked" : "") />
+                                        <label class="onoffswitch-label" for="STATUS_@item.CO_STATUS">
+                                            <span class="onoffswitch-inner"></span>
+                                            <span class="onoffswitch-switch"></span>
+                                        </label>
+                                    </div>
+                                </div>
+
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="divCategoriaProjeto" class="ibox col-md-3 is-display">
+
+        <div class="ibox-title" style="text-align:left">
+            <h5 class="pull-left">Categoria do Projeto</h5>
+            <button data-toggle="modal" data-target="#CategoriaProjeto" class="btn btn-success btn-circle pull-right" style="top:8px; right:5px;">
+                <i class="fa fa-plus"></i>
+            </button>
+        </div>
+        <div class="ibox-content">
+
+            <table class="table">
+                <thead>
+                    <tr class="thead-light">
+
+                        <th>
+                            Categoria
+                        </th>
+                        <th>
+                            Ativo?
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Categorias.OrderBy(x => x.DESCRICAO))
+                    {
+                        <tr>
+
+                            <td>
+                                <input class="co-categoria" id="CO_CATEGORIA" type="hidden" value="@item.CO_CATEGORIA" />
+                                <input onchange="AtualizarCategoriaProjeto(1,this)" class="categoria-descricao" type="text" value="@item.DESCRICAO" />
+
+                            </td>
+                            <td>
+                                <div class="switch">
+
+                                    <div class="onoffswitch">
+
+                                        <input id="Categorias_@item.CO_CATEGORIA" class="is-ativo-categoria onoffswitch-checkbox" type="checkbox" onchange="AtualizarCategoriaProjeto(2,this)" value="@item.IS_ATIVO" @(item.IS_ATIVO ? "checked" : "") />
+                                        <label class="onoffswitch-label" for="Categorias_@item.CO_CATEGORIA">
+                                            <span class="onoffswitch-inner"></span>
+                                            <span class="onoffswitch-switch"></span>
+                                        </label>
+                                    </div>
+                                </div>
+
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="divTipoMarcosEntregas" class="ibox col-md-3 is-display">
+
+        <div class="ibox-title" style="text-align:left">
+            <h5 class="pull-left">Tipo de Marcos Entregas</h5>
+            <button data-toggle="modal" data-target="#TipoMarcosEntregas" class="btn btn-success btn-circle pull-right" style="top:8px; right:5px;">
+                <i class="fa fa-plus"></i>
+            </button>
+        </div>
+        <div class="ibox-content">
+
+            <table class="table">
+                <thead>
+                    <tr class="thead-light">
+
+                        <th>
+                            Tipo
+                        </th>
+                        <th>
+                            Ativo?
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.TiposEntregas.OrderBy(x => x.NOME))
+                    {
+                        <tr>
+
+                            <td>
+                                <input class="co-tipo-marcos-entregas" id="CO_TIPO_MARCOS_ENTREGA" type="hidden" value="@item.CO_TIPO_MARCOS_ENTREGA" />
+                                <input onchange="AtualizarTipoMarcosEntregas(1,this)" class="tipo-entrega-nome" type="text" value="@item.NOME" />
+
+                            </td>
+                            <td>
+                                <div class="switch">
+
+                                    <div class="onoffswitch">
+
+                                        <input id="TipoMarcosEntrega_@item.CO_TIPO_MARCOS_ENTREGA" class="is-ativo-tipo-marcos-entrega onoffswitch-checkbox" type="checkbox" onchange="AtualizarTipoMarcosEntregas(2,this)" value="@item.IS_ATIVO" @(item.IS_ATIVO ? "checked" : "") />
+                                        <label class="onoffswitch-label" for="TipoMarcosEntrega_@item.CO_TIPO_MARCOS_ENTREGA">
+                                            <span class="onoffswitch-inner"></span>
+                                            <span class="onoffswitch-switch"></span>
+                                        </label>
+                                    </div>
+                                </div>
+
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="divStatusAtividadeMarcosEntrega" class="ibox col-md-3 is-display">
+
+        <div class="ibox-title" style="text-align:left">
+            <h5 class="pull-left">Situação das Atividades da Entrega</h5>
+            <button data-toggle="modal" data-target="#StatusAtividadeMarcosEntrega" class="btn btn-success btn-circle pull-right" style="top:8px; right:5px;">
+                <i class="fa fa-plus"></i>
+            </button>
+        </div>
+        <div class="ibox-content">
+
+            <table class="table">
+                <thead>
+                    <tr class="thead-light">
+
+                        <th>
+                            Tipo
+                        </th>
+                        <th>
+                            Ativo?
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.StatusAtividadesEntrega.OrderBy(x => x.DESCRICAO))
+                    {
+                        <tr>
+
+                            <td>
+                                <input class="co-status-atividade-marcos-entrega" id="CO_STATUS_ATIVIDADE_MARCO_ENTREGA" type="hidden" value="@item.CO_STATUS_ATIVIDADE_MARCO_ENTREGA" />
+                                <input onchange="AtualizarStatusAtividadeMarcosEntrega(1,this)" class="status-atividade-marcos-entrega-descricao" type="text" value="@item.DESCRICAO" />
+
+                            </td>
+                            <td>
+                                <div class="switch">
+
+                                    <div class="onoffswitch">
+
+                                        <input id="StatusAtividadeMarcosEntrega_@item.CO_STATUS_ATIVIDADE_MARCO_ENTREGA" class="is-ativo-status-atividade-marcos-entrega onoffswitch-checkbox" type="checkbox" onchange="AtualizarStatusAtividadeMarcosEntrega(2,this)" value="@item.IS_ATIVO" @(item.IS_ATIVO ? "checked" : "") />
+                                        <label class="onoffswitch-label" for="StatusAtividadeMarcosEntrega_@item.CO_STATUS_ATIVIDADE_MARCO_ENTREGA">
+                                            <span class="onoffswitch-inner"></span>
+                                            <span class="onoffswitch-switch"></span>
+                                        </label>
+                                    </div>
+                                </div>
+
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="Complexidade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form id="FormComplexidade" asp-action="AtualizarComplexidade">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Adicionar Complexidade</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <label>Nível de Complexidade</label><br />
+                    <input class="form-group existe-verificar" type="number" id="COMPLEXIDADE" name="COMPLEXIDADE" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <a style="color:white" onclick="submitModalComplexidade(this)" class="btn btn-primary">Salvar</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="modal fade" id="Prioridade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form id="FormPrioridade" class="modalSubmit" asp-action="AtualizarPrioridade">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Adicionar Prioridade</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <label>Nível de Prioridade</label><br />
+                    <input class="existe-verificar" type="number" id="PRIORIDADE" name="PRIORIDADE" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <a style="color:white" onclick="submitModalPrioridade(this)" class="btn btn-primary">Salvar</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="TipoProjeto" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form id="FormTipoProjeto" class="modalSubmit" asp-action="AtualizarTipoProjeto">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Adicionar Cliente de Projeto</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <label>Cliente</label><br />
+                    <input type="text" class="form-group existe-verificar" id="DESCRICAO" name="DESCRICAO" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <a style="color:white" onclick="submitModalTipoProjeto(this)" class="btn btn-success">Salvar</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="StatusProjeto" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form id="FormStatusProjeto" class="modalSubmit" asp-action="AtualizarStatusProjeto">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Adicionar Status do Projeto</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <label>Situação de Projeto</label><br />
+                    <input type="text" class="form-group existe-verificar" id="DESCRICAO" name="DESCRICAO" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <a style="color:white" onclick="submitModalStatusProjeto(this)" class="btn btn-primary">Salvar</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="CategoriaProjeto" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form id="FormCategoriaProjeto" class="modalSubmit" asp-action="AtualizarCategoria">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Adicionar Categoria do Projeto</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <label>Categoria do Projeto</label><br />
+                    <input type="text" class="form-group existe-verificar" id="DESCRICAO" name="DESCRICAO" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <a style="color:white" onclick="submitModalCategoriaProjeto(this)" class="btn btn-primary">Salvar</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="TipoMarcosEntregas" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form id="FormTipoMarcosEntregas" class="modalSubmit" asp-action="AtualizarTipoEntrega">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Adicionar Tipo de Marcos Entregas</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <label>Tipo de Marcos Entregas</label><br />
+                    <input type="text" class="form-group existe-verificar" id="NOME" name="NOME" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <a style="color:white" onclick="submitModalTipoMarcosEntregas(this)" class="btn btn-primary">Salvar</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="StatusAtividadeMarcosEntrega" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form id="FormStatusAtividadeMarcosEntrega" class="modalSubmit" asp-action="AtualizarStatusAtividadeMarcoEntrega">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Adicionar Situação de Atividade da Entrega</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <label> Situação de Atividade da Entrega</label><br />
+                    <input type="text" class="form-group existe-verificar" id="DESCRICAO" name="DESCRICAO" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <a style="color:white" onclick="submitModalStatusAtividadeMarcosEntrega(this)" class="btn btn-primary">Salvar</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section scripts{
+
+    <script>
+        $(document).ready(function () {
+
+            $('form.modalSubmit').bind("keypress", function (e) {
+                if ((e.keyCode == 10) || (e.keyCode == 13)) {
+                    e.preventDefault();
+                }
+            });
+
+            $("#ddlTabelas").val($("#optionSelected").val());
+            mostrarDiv();
+            var msg_sucess = $("#msg-sucess").val();
+            var msg_error = $("#msg-error").val();
+            toastr.options = {
+                "progressBar": true,
+                "positionClass": "toast-bottom-right"
+            }
+            if (msg_sucess != "") {
+                toastr["success"](msg_sucess);
+            }
+            if (msg_error != "") {
+                toastr["error"](msg_error);
+            }
+
+
+        });
+
+
+
+
+
+        function AtualizarComplexidade(element) {
+            //if (item == 'Complexidade') { }
+            $el = $(element)
+            $bloco = $el.parent().parent().parent().parent();
+            console.log('A');
+            var formData = new FormData();
+
+            formData.append("CO_COMPLEXIDADE", $bloco.find(".coComplexidade").val());
+            formData.append("COMPLEXIDADE", $bloco.find(".complexidade").val());
+            formData.append("IS_ATIVO", $bloco.find(".is-ativo-complexidade").is(':checked'));
+
+
+            $.ajax({
+                type: 'POST',
+                url: "/Parametros/AtualizarComplexidade",
+                data: formData,
+                contentType: false,
+                processData: false
+            }).done(function (data) {
+                console.log(data);
+                var mensagem = data.data.mensagem;
+
+                toastr.options = {
+                    "progressBar": true,
+                    "positionClass": "toast-bottom-right"
+                }
+                toastr["success"](mensagem)
+                //setTimeout(function () { window.location.href = url; }, 1000);
+            })
+
+
+        };
+
+
+        function AtualizarPrioridade(element) {
+            //if (item == 'Complexidade') { }
+            $el = $(element)
+            $bloco = $el.parent().parent().parent().parent();
+            console.log('A');
+            var formData = new FormData();
+
+            formData.append("CO_PRIORIDADE", $bloco.find(".coPrioridade").val());
+            formData.append("PRIORIDADE", $bloco.find(".prioridade").val());
+            formData.append("IS_ATIVO", $bloco.find(".is-ativo-prioridade").is(':checked'));
+
+
+            $.ajax({
+                type: 'POST',
+                url: "/Parametros/AtualizarPrioridade",
+                data: formData,
+                contentType: false,
+                processData: false
+            }).done(function (data) {
+                console.log(data);
+                var mensagem = data.data.mensagem;
+
+                toastr.options = {
+                    "progressBar": true,
+                    "positionClass": "toast-bottom-right"
+                }
+                toastr["success"](mensagem)
+                //setTimeout(function () { window.location.href = url; }, 1000);
+            })
+        }
+
+
+        function AtualizarTipoProjeto(modo,element) {
+            //if (item == 'Complexidade') { }
+            $el = $(element)
+            if (modo == 1) {
+                $bloco = $el.parent();
+            } else {
+                $bloco = $el.parent().parent().parent().parent();
+            }
+            console.log('A');
+            var formData = new FormData();
+
+            formData.append("CO_TIPO", $bloco.find(".co-tipo").val());
+            formData.append("DESCRICAO", $bloco.find(".tipo-descricao").val());
+            formData.append("IS_ATIVO", $bloco.find(".is-ativo-tipo").is(':checked'));
+
+
+            $.ajax({
+                type: 'POST',
+                url: "/Parametros/AtualizarTipoProjeto",
+                data: formData,
+                contentType: false,
+                processData: false
+            }).done(function (data) {
+                console.log(data);
+                var mensagem = data.data.mensagem;
+
+                toastr.options = {
+                    "progressBar": true,
+                    "positionClass": "toast-bottom-right"
+                }
+                toastr["success"](mensagem)
+                //setTimeout(function () { window.location.href = url; }, 1000);
+            })
+
+        }
+
+        function AtualizarStatusProjeto(modo,element) {
+            //if (item == 'Complexidade') { }
+          
+            $el = $(element)
+            if (modo == 1) {
+                $bloco = $el.parent();
+            } else {
+                $bloco = $el.parent().parent().parent().parent();
+            }
+           
+            var formData = new FormData();
+
+            formData.append("CO_STATUS", $bloco.find(".co-status").val());
+            formData.append("DESCRICAO", $bloco.find(".status-descricao").val());
+            formData.append("IS_ATIVO", $bloco.find(".is-ativo-status").is(':checked'));
+
+
+            $.ajax({
+                type: 'POST',
+                url: "/Parametros/AtualizarStatusProjeto",
+                data: formData,
+                contentType: false,
+                processData: false
+            }).done(function (data) {
+                console.log(data);
+                var mensagem = data.data.mensagem;
+
+                toastr.options = {
+                    "progressBar": true,
+                    "positionClass": "toast-bottom-right"
+                }
+                toastr["success"](mensagem)
+                //setTimeout(function () { window.location.href = url; }, 1000);
+            })
+
+        };
+
+        function AtualizarCategoriaProjeto(modo,element) {
+            //if (item == 'Complexidade') { }
+            $el = $(element)
+            if (modo == 1) {
+                $bloco = $el.parent();
+            } else {
+                $bloco = $el.parent().parent().parent().parent();
+            }
+     
+            var formData = new FormData();
+
+            formData.append("CO_CATEGORIA", $bloco.find(".co-categoria").val());
+            formData.append("DESCRICAO", $bloco.find(".categoria-descricao").val());
+            formData.append("IS_ATIVO", $bloco.find(".is-ativo-categoria").is(':checked'));
+
+            console.log(formData);
+
+            $.ajax({
+                type: 'POST',
+                url: "/Parametros/AtualizarCategoria",
+                data: formData,
+                contentType: false,
+                processData: false
+            }).done(function (data) {
+                console.log(data);
+                var mensagem = data.data.mensagem;
+
+                toastr.options = {
+                    "progressBar": true,
+                    "positionClass": "toast-bottom-right"
+                }
+                toastr["success"](mensagem)
+                //setTimeout(function () { window.location.href = url; }, 1000);
+            })
+
+        };
+
+
+        function AtualizarStatusAtividadeMarcosEntrega(modo,element) {
+            //if (item == 'Complexidade') { }
+            $el = $(element)
+            if (modo == 1) {
+                $bloco = $el.parent();
+            } else {
+                $bloco = $el.parent().parent().parent().parent();
+            }
+
+            var formData = new FormData();
+
+            formData.append("CO_STATUS_ATIVIDADE_MARCO_ENTREGA", $bloco.find(".co-status-atividade-marcos-entrega").val());
+            formData.append("DESCRICAO", $bloco.find(".status-atividade-marcos-entrega-descricao").val());
+            formData.append("IS_ATIVO", $bloco.find(".is-ativo-status-atividade-marcos-entrega").is(':checked'));
+
+            console.log(formData);
+
+            $.ajax({
+                type: 'POST',
+                url: "/Parametros/AtualizarStatusAtividadeMarcoEntrega",
+                data: formData,
+                contentType: false,
+                processData: false
+            }).done(function (data) {
+                console.log(data);
+                var mensagem = data.data.mensagem;
+
+                toastr.options = {
+                    "progressBar": true,
+                    "positionClass": "toast-bottom-right"
+                }
+                toastr["success"](mensagem)
+                //setTimeout(function () { window.location.href = url; }, 1000);
+            })
+
+        };
+
+
+
+        function AtualizarTipoMarcosEntregas(modo,element) {
+            //if (item == 'Complexidade') { }
+            $el = $(element)
+            if (modo == 1) {
+                $bloco = $el.parent();
+            } else {
+                $bloco = $el.parent().parent().parent().parent();
+            }
+
+            var formData = new FormData();
+
+            formData.append("CO_TIPO_MARCOS_ENTREGA", $bloco.find(".co-tipo-marcos-entregas").val());
+            formData.append("NOME", $bloco.find(".tipo-entrega-nome").val());
+            formData.append("IS_ATIVO", $bloco.find(".is-ativo-tipo-marcos-entrega").is(':checked'));
+
+            console.log(formData);
+
+            $.ajax({
+                type: 'POST',
+                url: "/Parametros/AtualizarTipoEntrega",
+                data: formData,
+                contentType: false,
+                processData: false
+            }).done(function (data) {
+                console.log(data);
+                var mensagem = data.data.mensagem;
+
+                toastr.options = {
+                    "progressBar": true,
+                    "positionClass": "toast-bottom-right"
+                }
+                toastr["success"](mensagem)
+                //setTimeout(function () { window.location.href = url; }, 1000);
+            })
+
+        };
+
+        function mostrarDiv() {
+
+
+            $('.is-display').css('display', 'none');
+
+            var itemDDL = $("#ddlTabelas").val();
+            //console.log('#' + itemDDL);
+            $('#' + itemDDL).css('display', 'block');
+
+
+
+        }
+
+
+        function submitModalComplexidade(element) {
+
+            $el = $(element)
+            $bloco = $el.parent().parent();
+            var valorElemento = $bloco.find(".existe-verificar").val();
+            console.log(valorElemento);
+            $.ajax({
+                type: 'POST',
+                url: "/Parametros/ComplexidadeExiste",
+                data: { complexidade: valorElemento }
+
+            }).done(function (data) {
+                console.log(data)
+                if (data == true) {
+                    toastr.options = {
+                        "progressBar": true,
+                        "positionClass": "toast-bottom-right"
+                    }
+
+                    toastr.error("Nível de Complexidade informada já existe.");
+                } else {
+                    $("#FormComplexidade").submit();
+                    $("#ddlTabelas").val("divComplexidade");
+                }
+            })
+        }
+
+        function submitModalPrioridade(element) {
+
+            $el = $(element)
+            $bloco = $el.parent().parent();
+            var valorElemento = $bloco.find(".existe-verificar").val();
+            console.log(valorElemento);
+            $.ajax({
+                type: 'POST',
+                url: "/Parametros/PrioridadeExiste",
+                data: { prioridade: valorElemento }
+
+            }).done(function (data) {
+                console.log(data)
+                if (data == true) {
+                    toastr.options = {
+                        "progressBar": true,
+                        "positionClass": "toast-bottom-right"
+                    }
+                    toastr.error("Nível de Prioridade informada já existe.");
+                } else {
+                    $("#FormPrioridade").submit();
+                }
+            })
+        }
+
+        function submitModalTipoProjeto(element) {
+
+            $el = $(element)
+            $bloco = $el.parent().parent();
+            var valorElemento = $bloco.find(".existe-verificar").val();
+            console.log(valorElemento);
+            $.ajax({
+                type: 'POST',
+                url: "/Parametros/TipoProjetoExiste",
+                data: { TipoProjeto: valorElemento }
+
+            }).done(function (data) {
+                console.log(data)
+                if (data == true) {
+                    toastr.options = {
+                        "progressBar": true,
+                        "positionClass": "toast-bottom-right"
+                    }
+                    toastr.error("Tipo do Projeto informado já existe.");
+                } else {
+                    $("#FormTipoProjeto").submit();
+                }
+            })
+        }
+
+        function submitModalStatusProjeto(element) {
+
+            $el = $(element)
+            $bloco = $el.parent().parent();
+            var valorElemento = $bloco.find(".existe-verificar").val();
+            console.log(valorElemento);
+            $.ajax({
+                type: 'POST',
+                url: "/Parametros/StatusProjetoExiste",
+                data: { statusProjeto: valorElemento }
+
+            }).done(function (data) {
+                console.log(data)
+                if (data == true) {
+                    toastr.options = {
+                        "progressBar": true,
+                        "positionClass": "toast-bottom-right"
+                    }
+                    toastr.error("Situação do Projeto informada já existe.");
+                } else {
+                    $("#FormStatusProjeto").submit();
+                }
+            })
+        }
+
+        function submitModalCategoriaProjeto(element) {
+
+            $el = $(element)
+            $bloco = $el.parent().parent();
+            var valorElemento = $bloco.find(".existe-verificar").val();
+            console.log(valorElemento);
+            $.ajax({
+                type: 'POST',
+                url: "/Parametros/CategoriaProjetoExiste",
+                data: { categoria: valorElemento }
+
+            }).done(function (data) {
+                console.log(data)
+                if (data == true) {
+                    toastr.options = {
+                        "progressBar": true,
+                        "positionClass": "toast-bottom-right"
+                    }
+                    toastr.error("Categoria do Projeto informada já existe.");
+                } else {
+                    $("#FormCategoriaProjeto").submit();
+                }
+            })
+        }
+
+        function submitModalTipoMarcosEntregas(element) {
+
+            $el = $(element)
+            $bloco = $el.parent().parent();
+            var valorElemento = $bloco.find(".existe-verificar").val();
+            console.log(valorElemento);
+            $.ajax({
+                type: 'POST',
+                url: "/Parametros/TipoMarcosEntregasExiste",
+                data: { tipo: valorElemento }
+
+            }).done(function (data) {
+                console.log(data)
+                if (data == true) {
+                    toastr.options = {
+                        "progressBar": true,
+                        "positionClass": "toast-bottom-right"
+                    }
+                    toastr.error("O tipo informado já existe.");
+                } else {
+                    $("#FormTipoMarcosEntregas").submit();
+                }
+            })
+        }
+
+        function submitModalStatusAtividadeMarcosEntrega(element) {
+
+            $el = $(element)
+            $bloco = $el.parent().parent();
+            var valorElemento = $bloco.find(".existe-verificar").val();
+ 
+            $.ajax({
+                type: 'POST',
+                url: "/Parametros/StatusAtividadeMarcosEntregaExiste",
+                data: { statusAtvidade: valorElemento }
+
+            }).done(function (data) {
+                console.log(data)
+                if (data == true) {
+                    toastr.options = {
+                        "progressBar": true,
+                        "positionClass": "toast-bottom-right"
+                    }
+                    toastr.error("O tipo informado já existe.");
+                } else {
+                    $("#FormStatusAtividadeMarcosEntrega").submit();
+                }
+            })
+        }
+
+
+
+    </script>
+}

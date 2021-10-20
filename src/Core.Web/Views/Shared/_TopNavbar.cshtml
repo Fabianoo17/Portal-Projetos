@@ -1,0 +1,33 @@
+﻿@{
+    var user = this.GetUserCustom();
+    bool isEnvironmentDev = this.IsEnvironmentDev();
+}
+<div class="row border-bottom">
+    <nav class="navbar navbar-static-top" role="navigation" style="height:60px; margin-bottom: 0; background:linear-gradient(to right, rgb(0,92,169), rgb(0,181,229))" >
+        <div class="row navbar-header">
+            <div> <a class="navbar-minimalize minimalize-styl-2 btn btn-success " href="#"><i class="fa fa-bars"></i> </a></div>
+           
+            <div style="margin-left:5px;margin-top:15px"><span style=" margin-top:40px;  font-size:18px; color:white">Portal Projetos</span></div>
+                
+        </div>
+        
+        <ul class="nav navbar-top-links navbar-right">
+            <li style="padding:20px">
+                <span class="m-r-sm text-muted welcome-message" data-i18n="topnav.welcometext"></span>
+            </li>
+            <li style="color:white" >
+                @if (user.IsAuthenticated())
+                {
+                    <text>
+                        <i class="fas fa-user"></i> @user.Nome | @user.UnidadeNome
+                    </text>
+                }
+                </li>
+            @*<li>
+                    <a class="right-sidebar-toggle">
+                        <i class="fa fa-tasks"></i>
+                    </a>
+                </li>*@
+        </ul>
+    </nav>
+</div>

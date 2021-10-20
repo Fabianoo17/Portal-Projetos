@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "Acesso negado";
+    Layout = "_LayoutError";
+}
+
+<div class="mx-auto shadow-lg p-5 mt-5 bg-white rounded text-center" style="width: 600px;">
+    <div class="big-content text-center">
+        <i class="fas fa-ban text-danger" style="font-size: 14em;"></i>
+    </div>
+    <h1 class="text-danger mt-4">Oops! Acesso negado</h1>
+    <p>
+        Você não tem acesso a este recurso.
+    </p>
+    <p>
+        <a asp-action="Index" asp-controller="Home">Voltar para início</a>
+    </p>
+</div>
